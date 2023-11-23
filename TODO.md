@@ -1,5 +1,13 @@
 # TODO
 
-1. Download data
-2. Run the pre-built model
-3. 
+## Initial Pytorch setup
+
+- Dataloader
+- Define model class
+- Training loop
+- Prediction
+- Test set run
+- Hydra config
+
+## Get idea
+- Get benchmark model's and accuracies from literature
