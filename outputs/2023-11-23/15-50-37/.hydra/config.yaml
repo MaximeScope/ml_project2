@@ -1,0 +1,4 @@
+training:
+  epochs: 20
+  batch_size: 32
+  lambda: 0.0001
