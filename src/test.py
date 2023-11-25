@@ -3,7 +3,7 @@ from torch.utils.data import random_split
 import numpy as np
 import matplotlib.pyplot as plt
 
-import utils
+from src import utils
 
 """
 Cross validation function taken from the validation function
@@ -24,10 +24,9 @@ def test_model(model, device, test_loader, loss_fn):
         predictions.extend(pred)
         gts.extend(gt_batch)
 
-    accuracies = utils.get_accuracy(predictions, gts)
-    losses = loss_fn(predictions, gts)
-
-    return losses, accuracies
+    avg_loss = loss_fn(predictions, gts)
+    avg_acc = utils.get_accuracy(predictions, gts)
+    return avg_loss, avg_acc
 
 # @torch.no_grad()
 # def crossValidate(model, device, train_loader, loss_fn):

@@ -6,8 +6,6 @@ import torch
 from torch.utils.data import Dataset, DataLoader, random_split
 from torchvision import transforms
 
-import plotting
-
 def torch_loader(root, transform):
 
     class TheDataset(Dataset):

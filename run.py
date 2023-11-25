@@ -11,10 +11,11 @@ from src import data_loader, model_cls, train, test
 @hydra.main(version_base=None, config_path=".", config_name="config")
 def run(cfg : DictConfig) -> None:
     print(OmegaConf.to_yaml(cfg))
-    device = cfg.device
-    # Set the random seed for reproducibility
-    torch.manual_seed(cfg.seed)
 
+    # ===== Torch config =====
+    device = cfg.device
+    torch.manual_seed(cfg.seed)
+    torch.set_default_dtype(getattr(torch, cfg.tensor_dtype))
 
     # ===== Data Loading =====
     train_loader, test_loader = data_loader.get_loader(cfg)
@@ -26,10 +27,16 @@ def run(cfg : DictConfig) -> None:
     loss_fn = torch.nn.functional.cross_entropy
 
     # ===== Train Model =====
-
+    train_losses, train_accs = train.train_model(
+        model,
+        optimizer,
+        loss_fn,
+        train_loader,
+        cfg,
+    )
 
     # ===== Test Model =====
-    losses, accuracies = test.test_model(
+    test_losses, test_accuracies = test.test_model(
         model,
         device,
         test_loader,

@@ -1,6 +1,5 @@
-import accuracy
-
-def train_model(model, optimizer, loss_fn, train_loader, val_loader, cfg):
+from src import utils
+def train_model(model, optimizer, loss_fn, train_loader, cfg):
     train_losses = []
     train_accs = []
     for epoch in range(1, cfg.training.epochs + 1):
@@ -20,13 +19,12 @@ def train_epoch(model, optimizer, loss_fn, train_loader, epoch, cfg):
         gt_batch.to(cfg.device)
         output = model(img_batch)
         loss = loss_fn(output, gt_batch)
-        accuracy = accuracy.get_accuracy(output, gt_batch)
+        accuracy = utils.get_accuracy(output, gt_batch)
 
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
-        # TODO: determine accuracy
         loss_float = loss.item()
         batch_losses.append(loss_float)
         batch_accs.append(accuracy)
@@ -36,4 +34,5 @@ def train_epoch(model, optimizer, loss_fn, train_loader, epoch, cfg):
                 f"batch_loss={loss_float:0.2e} "
                 f"batch_acc={accuracy:0.3f} "
             )
-    return batch_losses, batch_accs
+    avg_loss = sum(batch_losses) / len(batch_losses)
+    avg_acc = sum(batch_accs) / len(batch_accs)
