@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from functools import partial
 
-from src import data_loader, model_cls, train, test
+from src import data_loader, model_cls, train, test, plotting, submissions
 
 @hydra.main(version_base=None, config_path=".", config_name="config")
 def run(cfg : DictConfig) -> None:
@@ -42,6 +42,12 @@ def run(cfg : DictConfig) -> None:
         test_loader,
         loss_fn=partial(loss_fn, reduction="none"),
     )
+
+    # ===== Preditions =====
+    _, predictions = submissions.get_predictions(model, test_loader, cfg)
+
+    # ===== Plotting =====
+    plotting.plot_pred_on(test_loader, predictions, cfg) 
 
 if __name__ == "__main__":
     run()

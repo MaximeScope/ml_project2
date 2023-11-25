@@ -4,6 +4,6 @@ seed: 42
 tensor_dtype: 'float32'
 
 training:
-  epochs: 20
+  epochs: 2
   batch_size: 32
   lambda: 1e-4

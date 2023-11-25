@@ -1,13 +1,13 @@
 import torch
-import utils
+from src import utils
 
 
 @torch.no_grad()
-def get_predictions(model, device, val_loader, num=None):
+def get_predictions(model, test_loader, cfg,num=None):
     model.eval()
     points = []
-    for data, idxs in val_loader:
-        data = data.to(device)
+    for data, idxs in test_loader:
+        data = data.to(cfg.device)
         pred = model(data)
 
         points.extend(zip(idxs, pred))

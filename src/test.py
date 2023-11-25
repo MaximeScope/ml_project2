@@ -23,7 +23,8 @@ def test_model(model, device, test_loader, loss_fn):
 
         predictions.extend(pred)
         gts.extend(gt_batch)
-
+    predictions = torch.stack(predictions)
+    gts = torch.stack(gts)
     avg_loss = loss_fn(predictions, gts)
     avg_acc = utils.get_accuracy(predictions, gts)
     return avg_loss, avg_acc

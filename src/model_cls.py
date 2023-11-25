@@ -22,5 +22,5 @@ class Model(nn.Module):
         x = self.conv3(x) # 2 x 97 x 97
         x = self.sigmoid(x)
         x = self.up(x) # 1 x 400 x 400
-        x.squeeze_(0) # 400 x 400
+        x.squeeze_(1) # 400 x 400
         return x

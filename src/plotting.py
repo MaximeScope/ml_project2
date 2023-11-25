@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import random
 import torch
 
-import utils
+from src import utils
 
 def plot_random_sample(train_loader, indices=None):
 
