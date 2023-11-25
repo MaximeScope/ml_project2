@@ -2,7 +2,7 @@ import torch
 
 def get_accuracy(predictions, gts):
     """
-    Get the accuracy of the predictions compared to the ground truth over the whole batch
+    Get the accuracy of the predictions compared to the ground truth over the whole patch
     :param predictions: predictions of the model
     :param gts: ground truths
     :return: accuracy
@@ -12,8 +12,8 @@ def get_accuracy(predictions, gts):
     accuracy = correct_pixels / total_pixels
     return accuracy
 
-# Make bigger pixels of size batch_size x batch_size
-def smaller_image(img, batch_size):
+# Make bigger pixels of size patch_size x patch_size
+def smaller_image(img, patch_size):
     """
     img is a torch tensor of shape (3, 400, 400)
     devide the 400 x 400 image into 400/patch_size x 400/patch_size pixels
