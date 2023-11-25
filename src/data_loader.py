@@ -65,4 +65,4 @@ def get_loader():
 
 # Example usage:
 train_loader, test_loader = get_loader()
-plotting.plot_random_sample(train_loader, indices=[0])
+plotting.plot_pred_on(train_loader, pred=train_loader.dataset[1][1], indice=0)
