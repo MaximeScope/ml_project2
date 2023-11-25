@@ -1,8 +1,6 @@
-import matplotlib.image as mpimg
 import numpy as np
 import matplotlib.pyplot as plt
-import random
-import os, sys
+import os
 from PIL import Image
 
 import torch
@@ -48,56 +46,25 @@ def get_loader():
 
     dataset = torch_loader(root=data_root, transform=transform)
 
-    # Define the sizes for training and validation sets
+    # Define the sizes for training and testing sets
     train_size = int(0.8 * len(dataset))
-    val_size = len(dataset) - train_size
+    test_size = len(dataset) - train_size
 
     # Split the dataset
-    train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
+    train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
 
     # Create DataLoader for training set
     batch_size = 32
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
-    # Create DataLoader for validation set
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+    # Create DataLoader for testing set
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
-    return train_loader, val_loader
-
-def model_definition():
-
-    get_mlp = lambda image_size: torch.nn.Sequential(
-        torch.nn.Flatten(),
-        torch.nn.Linear(image_size * image_size, 256),
-        torch.nn.ReLU(),
-        torch.nn.Linear(256, 256),
-        torch.nn.ReLU(),
-        torch.nn.Linear(256, 256),
-        torch.nn.ReLU(),
-        torch.nn.Linear(256, 256),
-        torch.nn.ReLU(),
-        torch.nn.Linear(256, 10),
-    )
-
-    get_cnn = lambda image_size: torch.nn.Sequential(
-        torch.nn.Conv2d(in_channels=1, out_channels=32, kernel_size=5, stride=1, padding=2),
-        torch.nn.ReLU(),
-        torch.nn.Conv2d(32, 64, 5, stride=2, padding=2),
-        torch.nn.ReLU(),
-        torch.nn.Conv2d(64, 64, 5, stride=1, padding=2), # isn't it supposed to be padding 0 ?
-        torch.nn.ReLU(),
-        torch.nn.Conv2d(64, 128, 5, stride=2, padding=2),
-        torch.nn.ReLU(),
-        torch.nn.AdaptiveAvgPool2d(1),
-        torch.nn.Conv2d(128, 10, 1),
-        torch.nn.Flatten(),
-    )
-    
-    return get_mlp, get_cnn
+    return train_loader, test_loader
 
 def plot_random_sample(train_loader):
     # Set the figure size based on the number of samples
-    fig, axes = plt.subplots(1, 2, figsize=(8, 4))
+    _, axes = plt.subplots(1, 2, figsize=(8, 4))
 
     # Get the length of the dataset
     dataset_size = len(train_loader.dataset)
@@ -108,7 +75,7 @@ def plot_random_sample(train_loader):
     # Generate random indices using torch.randperm
     random_indices = torch.randperm(dataset_size)[:1]
 
-    for i, idx in enumerate(random_indices):
+    for idx in range(len(random_indices)):
         # Get the sample using the generated index
         image, groundtruth = train_loader.dataset[idx]
 
@@ -126,5 +93,5 @@ def plot_random_sample(train_loader):
     plt.show()
 
 # Example usage:
-train_loader, val_loader = get_loader()
+train_loader, test_loader = get_loader()
 plot_random_sample(train_loader)

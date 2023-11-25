@@ -2,8 +2,8 @@
 
 ## Initial Pytorch setup
 
-- Dataloader
-- Define model class
+- Dataloader - done (Maxime)
+- Define model class - done (Angelo)
 - Training loop
 - Prediction
 - Test set run
