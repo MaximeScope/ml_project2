@@ -62,6 +62,49 @@ def get_loader():
 
     return train_loader, test_loader
 
+
+def test_data_loader(root, transform):
+
+    class TheDataset(Dataset):
+        def __init__(self, root, transform=None, *args, **kwargs):
+            super(TheDataset, self).__init__(*args, **kwargs)
+            self.root = root
+            self.transform = transform
+            self.image_indices = [int(f.split("_")[1]) for f in os.listdir(self.root)]
+
+        def __len__(self):
+            return len(self.image_indices)
+
+        def __getitem__(self, idx):
+            # Make sure we get the correct index for the correct image
+            image_idx = self.image_indices[idx]
+            img_name = os.path.join(self.root, "test_" + str(image_idx), "test_" + str(image_idx) + ".png")
+
+            image = Image.open(img_name).convert('RGB')
+
+            if self.transform:
+                image = self.transform(image)
+
+            return image, image_idx
+
+    dataset = TheDataset(root=root, transform=transform)
+
+    return dataset
+
+
+def get_test_loader():
+    test_root = './data/test_set_images'
+    transform = transforms.Compose([transforms.ToTensor()])
+
+    dataset = test_data_loader(root=test_root, transform=transform)
+
+    batch_size = 32
+    # Create DataLoader for testing set
+    test_loader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
+
+    return test_loader
+
+
 def plot_random_sample(train_loader):
     # Set the figure size based on the number of samples
     _, axes = plt.subplots(1, 2, figsize=(8, 4))
