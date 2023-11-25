@@ -1,3 +1,5 @@
+device: 'cpu'
+
 training:
   epochs: 20
   batch_size: 32

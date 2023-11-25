@@ -3,6 +3,8 @@ from torch.utils.data import random_split
 import numpy as np
 import matplotlib.pyplot as plt
 
+import accuracy
+
 """
 Cross validation function taken from the validation function
 in exercise 8. Although, 20% of the training set is used for
@@ -22,14 +24,14 @@ def crossValidate(model, device, train_loader, loss_fn):
     # Split the training set
     _, val_loader = random_split(train_loader, [rest_size, val_size])
 
-    for data, target in val_loader:
-        data, target = data.to(device), target.to(device)
-        output = model(data)
-        val_loss += loss_fn(output, target).item() * len(data)
+    for img_batch, gt_batch in val_loader:
+        img_batch, gt_batch = img_batch.to(device), gt_batch.to(device)
+        output = model(img_batch)
+        val_loss += loss_fn(output, gt_batch).item() * len(img_batch)
         pred = output.argmax(
             dim=1, keepdim=True
         )  # get the index of the max log-probability
-        correct += pred.eq(target.view_as(pred)).sum().item()
+        correct += pred.eq(gt_batch.view_as(pred)).sum().item()
 
     val_loss /= len(val_loader.dataset)
 
@@ -44,23 +46,19 @@ def crossValidate(model, device, train_loader, loss_fn):
     return val_loss, correct / len(val_loader.dataset)
 
 @torch.no_grad()
-def get_predictions(model, device, test_loader, loss_fn, num=None):
+def test_model(model, device, test_loader, loss_fn):
     model.eval()
-    points = []
-    
-    for data, target in test_loader:
-        data, target = data.to(device), target.to(device)
-        output = model(data)
-        loss = loss_fn(output, target)
-        pred = output.argmax(dim=1, keepdim=True)
+    predictions = []
+    gts = []
 
-        data = np.split(data.cpu().numpy(), len(data))
-        loss = np.split(loss.cpu().numpy(), len(data))
-        pred = np.split(pred.cpu().numpy(), len(data))
-        target = np.split(target.cpu().numpy(), len(data))
-        points.extend(zip(data, loss, pred, target))
+    for img_batch, gt_batch in test_loader:
+        img_batch, gt_batch = img_batch.to(device), gt_batch.to(device)
+        pred = model(img_batch)
 
-        if num is not None and len(points) > num:
-            break
+        predictions.extend(pred)
+        gts.extend(gt_batch)
 
-    return points
+    accuracies = accuracy.get_accuracy(predictions, gts)
+    losses = loss_fn(predictions, gts)
+
+    return losses, accuracies
