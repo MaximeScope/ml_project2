@@ -1,11 +1,12 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import os
 from PIL import Image
 
 import torch
 from torch.utils.data import Dataset, DataLoader, random_split
 from torchvision import transforms
+
+import plotting
 
 def torch_loader(root, transform):
 
@@ -137,4 +138,4 @@ def plot_random_sample(train_loader):
 
 # Example usage:
 train_loader, test_loader = get_loader()
-plot_random_sample(train_loader)
+plotting.plot_random_sample(train_loader, indices=[0])

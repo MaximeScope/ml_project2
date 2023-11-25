@@ -3,7 +3,7 @@ from torch.utils.data import random_split
 import numpy as np
 import matplotlib.pyplot as plt
 
-import accuracy
+import utils
 
 """
 Cross validation function taken from the validation function
@@ -58,7 +58,7 @@ def test_model(model, device, test_loader, loss_fn):
         predictions.extend(pred)
         gts.extend(gt_batch)
 
-    accuracies = accuracy.get_accuracy(predictions, gts)
+    accuracies = utils.get_accuracy(predictions, gts)
     losses = loss_fn(predictions, gts)
 
     return losses, accuracies
