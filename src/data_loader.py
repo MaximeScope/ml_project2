@@ -40,8 +40,8 @@ def torch_loader(root, transform):
 
     return dataset
 
-def get_loader():
-    data_root = './data'
+def get_loader(cfg):
+    data_root = cfg.data_path
     transform = transforms.Compose([transforms.ToTensor()])
 
     dataset = torch_loader(root=data_root, transform=transform)
@@ -54,11 +54,10 @@ def get_loader():
     train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
 
     # Create DataLoader for training set
-    batch_size = 32
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    train_loader = DataLoader(train_dataset, batch_size=cfg.training.batch_size, shuffle=True)
 
     # Create DataLoader for testing set
-    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+    test_loader = DataLoader(test_dataset, batch_size=cfg.training.batch_size, shuffle=False)
 
     return train_loader, test_loader
 
@@ -68,9 +67,6 @@ def plot_random_sample(train_loader):
 
     # Get the length of the dataset
     dataset_size = len(train_loader.dataset)
-
-    # Set the random seed for reproducibility
-    torch.manual_seed(42)
 
     # Generate random indices using torch.randperm
     random_indices = torch.randperm(dataset_size)[:1]
@@ -91,7 +87,3 @@ def plot_random_sample(train_loader):
 
     plt.tight_layout()
     plt.show()
-
-# Example usage:
-train_loader, test_loader = get_loader()
-plot_random_sample(train_loader)

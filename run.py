@@ -11,11 +11,13 @@ from src import data_loader, model_cls, train, test
 @hydra.main(version_base=None, config_path=".", config_name="config")
 def run(cfg : DictConfig) -> None:
     print(OmegaConf.to_yaml(cfg))
-
     device = cfg.device
+    # Set the random seed for reproducibility
+    torch.manual_seed(cfg.seed)
+
 
     # ===== Data Loading =====
-    train_loader, test_loader = data_loader.get_loader()
+    train_loader, test_loader = data_loader.get_loader(cfg)
 
     # ===== Model, Optimizer and Loss function =====
     model = model_cls.Model()
