@@ -47,6 +47,7 @@ def crossValidate(model, device, train_loader, loss_fn):
 def get_predictions(model, device, test_loader, loss_fn, num=None):
     model.eval()
     points = []
+    
     for data, target in test_loader:
         data, target = data.to(device), target.to(device)
         output = model(data)
