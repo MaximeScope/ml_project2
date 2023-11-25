@@ -22,6 +22,10 @@ def plot_random_sample(train_loader, indices=None):
         # Get the sample using the generated index
         image, groundtruth = train_loader.dataset[idx]
 
+        image = utils.smaller_image(image, batch_size=16)
+
+        groundtruth = utils.smaller_image(groundtruth, batch_size=16)
+
         if len(indices) == 1:
             # Plot the original image
             axes[0].imshow(image.permute(1, 2, 0)) # Permute to (H, W, C) for plotting
