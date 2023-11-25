@@ -41,8 +41,8 @@ def torch_loader(root, transform):
 
     return dataset
 
-def get_loader():
-    data_root = './data'
+def get_loader(cfg):
+    data_root = cfg.data_path
     transform = transforms.Compose([transforms.ToTensor()])
 
     dataset = torch_loader(root=data_root, transform=transform)
@@ -55,14 +55,36 @@ def get_loader():
     train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
 
     # Create DataLoader for training set
-    batch_size = 32
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    train_loader = DataLoader(train_dataset, batch_size=cfg.training.batch_size, shuffle=True)
 
     # Create DataLoader for testing set
-    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+    test_loader = DataLoader(test_dataset, batch_size=cfg.training.batch_size, shuffle=False)
 
     return train_loader, test_loader
 
-# Example usage:
-train_loader, test_loader = get_loader()
-plotting.plot_random_sample(train_loader, indices=[0])
+def plot_random_sample(train_loader):
+    # Set the figure size based on the number of samples
+    _, axes = plt.subplots(1, 2, figsize=(8, 4))
+
+    # Get the length of the dataset
+    dataset_size = len(train_loader.dataset)
+
+    # Generate random indices using torch.randperm
+    random_indices = torch.randperm(dataset_size)[:1]
+
+    for idx in range(len(random_indices)):
+        # Get the sample using the generated index
+        image, groundtruth = train_loader.dataset[idx]
+
+        # Plot the original image
+        axes[0].imshow(image.permute(1, 2, 0)) # Permute to (H, W, C) for plotting
+        axes[0].set_title('Original Image')
+        axes[0].axis('off')
+
+        # Plot the ground truth
+        axes[1].imshow(groundtruth, cmap='gray')
+        axes[1].set_title('Ground Truth')
+        axes[1].axis('off')
+
+    plt.tight_layout()
+    plt.show()

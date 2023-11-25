@@ -161,3 +161,9 @@ cython_debug/
 
 # Data
 data/
+
+# scrap
+scrap.*
+
+# hydra logs
+outputs/

@@ -28,7 +28,7 @@ def test_model(model, device, test_loader, loss_fn):
     losses = loss_fn(predictions, gts)
 
     return losses, accuracies
-    
+
 # @torch.no_grad()
 # def crossValidate(model, device, train_loader, loss_fn):
 #     model.eval()  # Important: eval mode (affects dropout, batch norm etc)
