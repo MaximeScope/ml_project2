@@ -28,3 +28,5 @@
 ## TODO
 - cross validation
 - plot predictions 
+- get_accuracy
+- submission function

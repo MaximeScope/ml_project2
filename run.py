@@ -6,10 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from functools import partial
 
-import data_loader
-import model_cls
-import train
-import test
+from src import data_loader, model_cls, train, test
 
 @hydra.main(version_base=None, config_path=".", config_name="config")
 def run(cfg : DictConfig) -> None:
