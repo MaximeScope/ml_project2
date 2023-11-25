@@ -101,34 +101,3 @@ def get_test_loader():
     test_loader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
 
     return test_loader
-
-
-def plot_random_sample(train_loader):
-    # Set the figure size based on the number of samples
-    _, axes = plt.subplots(1, 2, figsize=(8, 4))
-
-    # Get the length of the dataset
-    dataset_size = len(train_loader.dataset)
-
-    # Set the random seed for reproducibility
-    torch.manual_seed(42)
-
-    # Generate random indices using torch.randperm
-    random_indices = torch.randperm(dataset_size)[:1]
-
-    for idx in range(len(random_indices)):
-        # Get the sample using the generated index
-        image, groundtruth = train_loader.dataset[idx]
-
-        # Plot the original image
-        axes[0].imshow(image.permute(1, 2, 0)) # Permute to (H, W, C) for plotting
-        axes[0].set_title('Original Image')
-        axes[0].axis('off')
-
-        # Plot the ground truth
-        axes[1].imshow(groundtruth, cmap='gray')
-        axes[1].set_title('Ground Truth')
-        axes[1].axis('off')
-
-    plt.tight_layout()
-    plt.show()
