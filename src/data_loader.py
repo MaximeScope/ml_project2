@@ -75,15 +75,14 @@ def test_data_loader(root, transform):
 
         def __getitem__(self, idx):
             # Make sure we get the correct index for the correct image
-            image_idx = self.image_indices[idx]
-            img_name = os.path.join(self.root, "test_" + str(image_idx), "test_" + str(image_idx) + ".png")
+            img_name = os.path.join(self.root, "test_" + str(self.image_indices[idx]), "test_" + str(self.image_indices[idx]) + ".png")
 
             image = Image.open(img_name).convert('RGB')
 
             if self.transform:
                 image = self.transform(image)
 
-            return image, image_idx
+            return image
 
     dataset = TheDataset(root=root, transform=transform)
 
