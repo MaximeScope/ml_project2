@@ -167,3 +167,6 @@ scrap.*
 
 # hydra logs
 outputs/
+
+# Debugger
+.vscode/
