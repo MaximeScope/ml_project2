@@ -1,19 +1,20 @@
 import torch
 
 @torch.no_grad()
-def get_accuracy(predictions, gts):
+def get_f1(predictions, gts):
     """
-    Get the accuracy of the predictions compared to the ground truth over the whole patch
+    Get the f1 of the predictions compared to the ground truth over the whole patch
     :param predictions: predictions of the model
     :param gts: ground truths
     :return: accuracy
     """
     predictions_tresholded = (predictions > 0.5).float()
-    correct_pixels = torch.eq(predictions_tresholded, gts).sum().item()
-    total_pixels = predictions.numel()
-    accuracy = correct_pixels / total_pixels
-    return accuracy
-
+    # get f1 score
+    tp = torch.sum(predictions_tresholded * gts)
+    fp = torch.sum(predictions_tresholded * (1 - gts))
+    fn = torch.sum((1 - predictions_tresholded) * gts)
+    f1 = 2 * tp / (2 * tp + fp + fn)
+    return f1
 
 # Make bigger pixels of size patch_size x patch_size
 def smaller_image(img, patch_size):

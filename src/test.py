@@ -27,8 +27,8 @@ def test_model(model, device, test_loader, loss_fn):
     predictions = torch.stack(predictions)
     gts = torch.stack(gts)
     avg_loss = loss_fn(predictions, gts)
-    avg_acc = utils.get_accuracy(predictions, gts)
-    return avg_loss, avg_acc
+    avg_f1 = utils.get_f1(predictions, gts)
+    return avg_loss, avg_f1
 
 
 # @torch.no_grad()

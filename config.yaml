@@ -1,10 +1,9 @@
 device: 'cpu'
 data_path: './data'
 seed: 42
-num_workers: 8
 tensor_dtype: 'float32'
 
 training:
   epochs: 5
-  batch_size: 10
+  batch_size: 30
   lr: 1e-3

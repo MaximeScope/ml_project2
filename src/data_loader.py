@@ -62,7 +62,6 @@ def get_loader(cfg):
         train_dataset,
         batch_size=cfg.training.batch_size,
         shuffle=True,
-        num_workers=cfg.num_workers,
     )
 
     # Create DataLoader for testing set
@@ -70,7 +69,6 @@ def get_loader(cfg):
         test_dataset,
         batch_size=cfg.training.batch_size,
         shuffle=False,
-        num_workers=cfg.num_workers,
     )
 
     return train_loader, test_loader

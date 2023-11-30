@@ -22,6 +22,6 @@ class Model(nn.Module):
         x = self.down(x)  # 64 x 97 x 97
         x = self.conv3(x)  # 2 x 97 x 97
         x = self.up(x)  # 1 x 400 x 400
-        x = self.sigmoid(x)
         x.squeeze_(1)  # 400 x 400
+        x = self.sigmoid(x)
         return x

@@ -3,30 +3,30 @@ from tqdm import tqdm
 
 def train_model(model, optimizer, loss_fn, train_loader, cfg):
     train_losses = []
-    train_accs = []
+    train_f1s = []
     for epoch in range(1, cfg.training.epochs + 1):
         avg_loss, avg_acc = train_epoch(model, optimizer, loss_fn, train_loader, cfg)
         train_losses.append(avg_loss)
-        train_accs.append(avg_acc)
+        train_f1s.append(avg_acc)
 
         print(
             f"Train Epoch: {epoch}: "
             f"loss={avg_loss:0.2e}, "
-            f"acc={avg_acc:0.3f}"
+            f"f1={avg_acc:0.3f}"
         )
-    return train_losses, train_accs
+    return train_losses, train_f1s
 
 
 def train_epoch(model, optimizer, loss_fn, train_loader, cfg):
     model.train()
     batch_losses = []
-    batch_accs = []
+    batch_f1 = []
     for batch_idx, (img_batch, gt_batch) in enumerate(tqdm(train_loader), start=1):
         img_batch.to(cfg.device)
         gt_batch.to(cfg.device)
         output = model(img_batch)
         loss = loss_fn(output, gt_batch)
-        accuracy = utils.get_accuracy(output, gt_batch)
+        f1 = utils.get_f1(output, gt_batch)
 
         optimizer.zero_grad()
         loss.backward()
@@ -34,7 +34,7 @@ def train_epoch(model, optimizer, loss_fn, train_loader, cfg):
 
         loss_float = loss.item()
         batch_losses.append(loss_float)
-        batch_accs.append(accuracy)
+        batch_f1.append(f1)
     avg_loss = sum(batch_losses) / len(batch_losses)
-    avg_acc = sum(batch_accs) / len(batch_accs)
-    return avg_loss, avg_acc
+    avg_f1 = sum(batch_f1) / len(batch_f1)
+    return avg_loss, avg_f1
