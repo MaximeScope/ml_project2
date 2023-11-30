@@ -1,5 +1,6 @@
 from torch import nn
 
+
 class BasicCNN(nn.Module):
     def __init__(self):
         super(BasicCNN, self).__init__()

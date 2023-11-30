@@ -22,7 +22,7 @@ def run(cfg: DictConfig) -> None:
     train_loader, test_loader = data_loader.get_loader(cfg)
 
     # ===== Model, Optimizer and Loss function =====
-    model = unet.UNet(n_channels=3)
+    model = unet.UNet()
     model = model.to(device=device)
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=cfg.training.lr, weight_decay=cfg.training.weight_decay
