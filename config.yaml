@@ -5,6 +5,6 @@ num_workers: 8
 tensor_dtype: 'float32'
 
 training:
-  epochs: 2
+  epochs: 5
   batch_size: 32
   lambda: 1e-4

@@ -13,6 +13,7 @@ def get_accuracy(predictions, gts):
     accuracy = correct_pixels / total_pixels
     return accuracy
 
+
 # Make bigger pixels of size patch_size x patch_size
 def smaller_image(img, patch_size):
     """
@@ -21,25 +22,33 @@ def smaller_image(img, patch_size):
     by averaging the rgb values for each pixel.
     """
     if len(img.shape) == 2:
-        img = img.reshape(
-            int(img.shape[0]/patch_size),
-            patch_size,
-            int(img.shape[1]/patch_size),
-            patch_size
-        ).mean(3).mean(1)
+        img = (
+            img.reshape(
+                int(img.shape[0] / patch_size),
+                patch_size,
+                int(img.shape[1] / patch_size),
+                patch_size,
+            )
+            .mean(3)
+            .mean(1)
+        )
     else:
-        img = img.reshape(
-            img.shape[0],
-            int(img.shape[1]/patch_size),
-            patch_size,
-            int(img.shape[2]/patch_size),
-            patch_size
-        ).mean(4).mean(2)
+        img = (
+            img.reshape(
+                img.shape[0],
+                int(img.shape[1] / patch_size),
+                patch_size,
+                int(img.shape[2] / patch_size),
+                patch_size,
+            )
+            .mean(4)
+            .mean(2)
+        )
 
     return img
 
-def bigger_image(img, patch_size):
 
+def bigger_image(img, patch_size):
     # Reshape the tensor using kron:
     kron_param = torch.ones(patch_size, patch_size, dtype=img.dtype)
     scaled_image = torch.kron(img, kron_param)

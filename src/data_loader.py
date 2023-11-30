@@ -89,7 +89,11 @@ def test_data_loader(root, transform):
 
         def __getitem__(self, idx):
             # Make sure we get the correct index for the correct image
-            img_name = os.path.join(self.root, "test_" + str(self.image_indices[idx]), "test_" + str(self.image_indices[idx]) + ".png")
+            img_name = os.path.join(
+                self.root,
+                "test_" + str(self.image_indices[idx]),
+                "test_" + str(self.image_indices[idx]) + ".png",
+            )
 
             image = Image.open(img_name).convert("RGB")
 

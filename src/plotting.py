@@ -56,20 +56,21 @@ def plot_prediction(test_loader, pred, indice):
     image, groundtruth = test_loader.dataset[indice]
 
     # Plot the original image
-    axes[0].imshow(image.permute(1, 2, 0)) # Permute to (H, W, C) for plotting
-    axes[0].set_title('Original Image')
-    axes[0].axis('off')
+    axes[0].imshow(image.permute(1, 2, 0))  # Permute to (H, W, C) for plotting
+    axes[0].set_title("Original Image")
+    axes[0].axis("off")
     # Plot the ground truth
-    axes[1].imshow(groundtruth, cmap='gray')
-    axes[1].set_title('Ground Truth')
-    axes[1].axis('off')
+    axes[1].imshow(groundtruth, cmap="gray")
+    axes[1].set_title("Ground Truth")
+    axes[1].axis("off")
     # Plot the prediction
-    axes[2].imshow(pred, cmap='gray')
-    axes[2].set_title('Prediction')
-    axes[2].axis('off')
+    axes[2].imshow(pred, cmap="gray")
+    axes[2].set_title("Prediction")
+    axes[2].axis("off")
 
     plt.tight_layout()
     plt.show()
+
 
 def plot_pred_on(test_loader, pred, indice):
     # Set the figure size based on the number of samples
@@ -80,21 +81,21 @@ def plot_pred_on(test_loader, pred, indice):
 
     # Scale the prediction to the size of the image
     if pred.shape[0] != image.shape[1] or pred.shape[1] != image.shape[2]:
-        pred = utils.bigger_image(pred, patch_size=int(image.shape[1]/pred.shape[0]))
+        pred = utils.bigger_image(pred, patch_size=int(image.shape[1] / pred.shape[0]))
 
     # Create a red-to-white colormap
-    cmap = LSC.from_list('red_to_white', ['red', 'white'])
+    cmap = LSC.from_list("red_to_white", ["red", "white"])
 
     # Plot the original image
-    axes[0].imshow(image.permute(1, 2, 0)) # Permute to (H, W, C) for plotting
+    axes[0].imshow(image.permute(1, 2, 0))  # Permute to (H, W, C) for plotting
     axes[0].imshow(groundtruth, cmap=cmap, alpha=0.5)
-    axes[0].set_title('Ground Truth')
-    axes[0].axis('off')
+    axes[0].set_title("Ground Truth")
+    axes[0].axis("off")
     # Plot the ground truth
-    axes[1].imshow(image.permute(1, 2, 0)) # Permute to (H, W, C) for plotting
+    axes[1].imshow(image.permute(1, 2, 0))  # Permute to (H, W, C) for plotting
     axes[1].imshow(pred, cmap=cmap, alpha=0.5)
-    axes[1].set_title('Prediction')
-    axes[1].axis('off')
+    axes[1].set_title("Prediction")
+    axes[1].axis("off")
 
     plt.tight_layout()
     plt.show()
