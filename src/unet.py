@@ -7,7 +7,7 @@ class UNet(nn.Module):
     def __init__(self, n_channels, bilinear=False):
         super(UNet, self).__init__()
         self.n_channels = n_channels
-        self.n_classes = n_classes
+        self.n_classes = 2
         self.bilinear = bilinear
 
         self.inc = (DoubleConv(n_channels, 64))
@@ -20,7 +20,7 @@ class UNet(nn.Module):
         self.up2 = (Up(512, 256 // factor, bilinear))
         self.up3 = (Up(256, 128 // factor, bilinear))
         self.up4 = (Up(128, 64, bilinear))
-        self.outc = (OutConv(64, 2))
+        self.outc = (OutConv(64, 1))
 
     def forward(self, x):
         x1 = self.inc(x)
@@ -32,7 +32,9 @@ class UNet(nn.Module):
         x = self.up2(x, x3)
         x = self.up3(x, x2)
         x = self.up4(x, x1)
-        logits = self.outc(x)
+        x = self.outc(x)
+        logits = torch.sigmoid(x)
+        logits = torch.squeeze(logits, dim=1)
         return logits
 
 class DoubleConv(nn.Module):

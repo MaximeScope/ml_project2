@@ -19,8 +19,8 @@ def train_epoch(model, optimizer, loss_fn, train_loader, cfg):
     batch_losses = []
     batch_f1s = []
     for batch_idx, (img_batch, gt_batch) in enumerate(tqdm(train_loader), start=1):
-        img_batch.to(cfg.device)
-        gt_batch.to(cfg.device)
+        img_batch = img_batch.to(cfg.device)
+        gt_batch = gt_batch.to(cfg.device)
         output = model(img_batch)
         loss = loss_fn(output, gt_batch)
         f1 = utils.get_f1(output, gt_batch)

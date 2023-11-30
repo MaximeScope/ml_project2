@@ -23,13 +23,16 @@ def make_submission(predictions):
     for idx, pred_batch in enumerate(predictions):
         patched_pred = utils.smaller_image(pred_batch, 16)
         curr_y = 0
-        for line in patched_pred:
+        for i, line in enumerate(patched_pred):
             curr_x = 0
-            for point in line:
+            for j, point in enumerate(line):
                 point_pred = 1 if point > 0.5 else 0
+                patched_pred[i][j] = point_pred
                 output += f"{idx:03d}_{curr_y}_{curr_x},{point_pred}\n"
                 curr_x += 16
             curr_y += 16
 
     with open("submission.csv", "w") as f:
         f.write(output)
+
+    return patched_pred
