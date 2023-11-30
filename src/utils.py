@@ -8,7 +8,8 @@ def get_accuracy(predictions, gts):
     :param gts: ground truths
     :return: accuracy
     """
-    correct_pixels = torch.eq(predictions, gts).sum().item()
+    predictions_tresholded = (predictions > 0.5).float()
+    correct_pixels = torch.eq(predictions_tresholded, gts).sum().item()
     total_pixels = predictions.numel()
     accuracy = correct_pixels / total_pixels
     return accuracy

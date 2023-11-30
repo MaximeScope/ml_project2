@@ -25,7 +25,7 @@ def run(cfg: DictConfig) -> None:
     model = model_cls.Model()
     model = model.to(device=device)
     optimizer = torch.optim.AdamW(model.parameters())
-    loss_fn = torch.nn.functional.cross_entropy
+    loss_fn = torch.nn.functional.binary_cross_entropy_with_logits
 
     # ===== Train Model =====
     train_losses, train_accs = train.train_model(
@@ -51,7 +51,7 @@ def run(cfg: DictConfig) -> None:
     submissions.make_submission(predictions)
 
     # ===== Plotting =====
-    # plotting.plot_pred_on(test_loader, predictions, cfg)
+    plotting.plot_pred_on(test_loader, predictions, cfg)
 
 
 if __name__ == "__main__":
