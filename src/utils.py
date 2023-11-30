@@ -1,6 +1,6 @@
 import torch
 
-
+@torch.no_grad()
 def get_accuracy(predictions, gts):
     """
     Get the accuracy of the predictions compared to the ground truth over the whole patch

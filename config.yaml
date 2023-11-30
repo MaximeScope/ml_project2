@@ -7,4 +7,4 @@ tensor_dtype: 'float32'
 training:
   epochs: 5
   batch_size: 10
-  lambda: 1e-2
+  lr: 1e-3
