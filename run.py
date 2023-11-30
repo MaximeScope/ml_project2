@@ -50,7 +50,7 @@ def run(cfg : DictConfig) -> None:
     submissions.make_submission(predictions)
 
     # ===== Plotting =====
-    #plotting.plot_pred_on(test_loader, predictions, cfg)
+    plotting.plot_pred_on(test_loader, predictions, 1)
 
 if __name__ == "__main__":
     run()
