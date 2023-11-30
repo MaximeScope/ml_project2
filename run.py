@@ -45,10 +45,13 @@ def run(cfg: DictConfig) -> None:
     )
 
     # ===== Preditions =====
-    _, predictions = submissions.get_predictions(model, test_loader, cfg)
+    predictions = submissions.get_predictions(model, test_loader, cfg)
+
+    # ==== Make Submission =====
+    submissions.make_submission(predictions)
 
     # ===== Plotting =====
-    plotting.plot_pred_on(test_loader, predictions, cfg)
+    #plotting.plot_pred_on(test_loader, predictions, cfg)
 
 
 if __name__ == "__main__":
