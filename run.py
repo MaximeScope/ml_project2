@@ -5,9 +5,8 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 from functools import partial
-from . import models_cls
 
-from src import data_loader, train, test, plotting, submissions
+from src import data_loader, train, test, plotting, submissions, unet
 
 
 @hydra.main(version_base=None, config_path=".", config_name="config")
@@ -23,7 +22,7 @@ def run(cfg: DictConfig) -> None:
     train_loader, test_loader = data_loader.get_loader(cfg)
 
     # ===== Model, Optimizer and Loss function =====
-    model = models_cls.Model()
+    model = unet.UNet()
     model = model.to(device=device)
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=cfg.training.lr, weight_decay=cfg.training.weight_decay
