@@ -83,6 +83,7 @@ def test_data_loader(root, transform):
             self.root = root
             self.transform = transform
             self.image_indices = [int(f.split("_")[1]) for f in os.listdir(self.root)]
+            self.image_folder = os.path.join(root, "test_set_images")
 
         def __len__(self):
             return len(self.image_indices)
@@ -107,11 +108,11 @@ def test_data_loader(root, transform):
     return dataset
 
 
-def get_test_loader():
-    test_root = "./data/test_set_images"
+def get_test_loader(cfg):
+    data_root = cfg.data_path
     transform = transforms.Compose([transforms.ToTensor()])
 
-    dataset = test_data_loader(root=test_root, transform=transform)
+    dataset = test_data_loader(root=data_root, transform=transform)
 
     batch_size = 32
     # Create DataLoader for testing set
