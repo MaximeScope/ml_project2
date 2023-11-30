@@ -71,10 +71,11 @@ def plot_prediction(test_loader, pred, indice):
     plt.tight_layout()
     plt.show()
 
+
 def plot_pred_on(test_loader, predictions, indice):
     # Set the figure size based on the number of samples
     _, axes = plt.subplots(1, 2, figsize=(8, 4))
-    
+
     # Get the prediction
     pred = predictions[indice]
 

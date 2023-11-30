@@ -1,9 +1,8 @@
 from torch import nn
 
-
-class Model(nn.Module):
+class BasicCNN(nn.Module):
     def __init__(self):
-        super(Model, self).__init__()
+        super(BasicCNN, self).__init__()
         # Define layers
         self.conv1 = nn.Conv2d(3, 32, 5)
         self.conv2 = nn.Conv2d(32, 64, 5)

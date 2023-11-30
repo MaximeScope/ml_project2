@@ -1,5 +1,6 @@
 import torch
 
+
 @torch.no_grad()
 def get_f1(predictions, gts):
     """
@@ -15,6 +16,7 @@ def get_f1(predictions, gts):
     fn = torch.sum((1 - predictions_tresholded) * gts)
     f1 = 2 * tp / (2 * tp + fp + fn)
     return f1
+
 
 # Make bigger pixels of size patch_size x patch_size
 def smaller_image(img, patch_size):
