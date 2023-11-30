@@ -11,6 +11,7 @@ in exercise 8. Although, 20% of the training set is used for
 validation, instead of using a testing-validating set.
 """
 
+
 @torch.no_grad()
 def test_model(model, device, test_loader, loss_fn):
     model.eval()
@@ -29,12 +30,13 @@ def test_model(model, device, test_loader, loss_fn):
     avg_acc = utils.get_accuracy(predictions, gts)
     return avg_loss, avg_acc
 
+
 # @torch.no_grad()
 # def crossValidate(model, device, train_loader, loss_fn):
 #     model.eval()  # Important: eval mode (affects dropout, batch norm etc)
 #     val_loss = 0
 #     correct = 0
-    
+
 #     # Define the sizes for training and testing sets
 #     rest_size = int(0.8 * len(train_loader))
 #     val_size = len(train_loader) - rest_size

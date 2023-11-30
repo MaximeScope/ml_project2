@@ -6,26 +6,30 @@ import torch
 from torch.utils.data import Dataset, DataLoader, random_split
 from torchvision import transforms
 
-def torch_loader(root, transform):
 
+def torch_loader(root, transform):
     class TheDataset(Dataset):
         def __init__(self, root, transform=None, *args, **kwargs):
             super(TheDataset, self).__init__(*args, **kwargs)
             self.root = root
             self.transform = transform
-            self.image_folder = os.path.join(root, 'training', 'images')
-            self.gt_folder = os.path.join(root, 'training', 'groundtruth')
-            self.image_filenames = [f for f in os.listdir(self.image_folder) if f.endswith('.png')]
+            self.image_folder = os.path.join(root, "training", "images")
+            self.gt_folder = os.path.join(root, "training", "groundtruth")
+            self.image_filenames = [
+                f for f in os.listdir(self.image_folder) if f.endswith(".png")
+            ]
 
         def __len__(self):
             return len(self.image_filenames)
 
         def __getitem__(self, idx):
             img_name = os.path.join(self.image_folder, self.image_filenames[idx])
-            gt_name = os.path.join(self.gt_folder, self.image_filenames[idx]) # gt standing for groundtruth
+            gt_name = os.path.join(
+                self.gt_folder, self.image_filenames[idx]
+            )  # gt standing for groundtruth
 
-            image = Image.open(img_name).convert('RGB')
-            gt = Image.open(gt_name).convert('L')  # L mode represents grayscale
+            image = Image.open(img_name).convert("RGB")
+            gt = Image.open(gt_name).convert("L")  # L mode represents grayscale
 
             if self.transform:
                 image = self.transform(image)
@@ -38,6 +42,7 @@ def torch_loader(root, transform):
     dataset = TheDataset(root=root, transform=transform)
 
     return dataset
+
 
 def get_loader(cfg):
     data_root = cfg.data_path
@@ -53,16 +58,25 @@ def get_loader(cfg):
     train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
 
     # Create DataLoader for training set
-    train_loader = DataLoader(train_dataset, batch_size=cfg.training.batch_size, shuffle=True)
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=cfg.training.batch_size,
+        shuffle=True,
+        num_workers=cfg.num_workers,
+    )
 
     # Create DataLoader for testing set
-    test_loader = DataLoader(test_dataset, batch_size=cfg.training.batch_size, shuffle=False)
+    test_loader = DataLoader(
+        test_dataset,
+        batch_size=cfg.training.batch_size,
+        shuffle=False,
+        num_workers=cfg.num_workers,
+    )
 
     return train_loader, test_loader
 
 
 def test_data_loader(root, transform):
-
     class TheDataset(Dataset):
         def __init__(self, root, transform=None, *args, **kwargs):
             super(TheDataset, self).__init__(*args, **kwargs)
@@ -76,9 +90,11 @@ def test_data_loader(root, transform):
         def __getitem__(self, idx):
             # Make sure we get the correct index for the correct image
             image_idx = self.image_indices[idx]
-            img_name = os.path.join(self.root, "test_" + str(image_idx), "test_" + str(image_idx) + ".png")
+            img_name = os.path.join(
+                self.root, "test_" + str(image_idx), "test_" + str(image_idx) + ".png"
+            )
 
-            image = Image.open(img_name).convert('RGB')
+            image = Image.open(img_name).convert("RGB")
 
             if self.transform:
                 image = self.transform(image)
@@ -91,7 +107,7 @@ def test_data_loader(root, transform):
 
 
 def get_test_loader():
-    test_root = './data/test_set_images'
+    test_root = "./data/test_set_images"
     transform = transforms.Compose([transforms.ToTensor()])
 
     dataset = test_data_loader(root=test_root, transform=transform)
@@ -121,14 +137,14 @@ def plot_random_sample(train_loader):
         image, groundtruth = train_loader.dataset[idx]
 
         # Plot the original image
-        axes[0].imshow(image.permute(1, 2, 0)) # Permute to (H, W, C) for plotting
-        axes[0].set_title('Original Image')
-        axes[0].axis('off')
+        axes[0].imshow(image.permute(1, 2, 0))  # Permute to (H, W, C) for plotting
+        axes[0].set_title("Original Image")
+        axes[0].axis("off")
 
         # Plot the ground truth
-        axes[1].imshow(groundtruth, cmap='gray')
-        axes[1].set_title('Ground Truth')
-        axes[1].axis('off')
+        axes[1].imshow(groundtruth, cmap="gray")
+        axes[1].set_title("Ground Truth")
+        axes[1].axis("off")
 
     plt.tight_layout()
     plt.show()

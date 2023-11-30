@@ -1,5 +1,6 @@
 import torch
 
+
 def get_accuracy(predictions, gts):
     """
     Get the accuracy of the predictions compared to the ground truth over the whole batch
@@ -12,6 +13,7 @@ def get_accuracy(predictions, gts):
     accuracy = correct_pixels / total_pixels
     return accuracy
 
+
 # Make bigger pixels of size batch_size x batch_size
 def smaller_image(img, batch_size):
     """
@@ -20,25 +22,33 @@ def smaller_image(img, batch_size):
     by averaging the rgb values for each pixel.
     """
     if len(img.shape) == 2:
-        img = img.reshape(
-            int(img.shape[0]/batch_size),
-            batch_size,
-            int(img.shape[1]/batch_size),
-            batch_size
-        ).mean(3).mean(1)
+        img = (
+            img.reshape(
+                int(img.shape[0] / batch_size),
+                batch_size,
+                int(img.shape[1] / batch_size),
+                batch_size,
+            )
+            .mean(3)
+            .mean(1)
+        )
     else:
-        img = img.reshape(
-            img.shape[0],
-            int(img.shape[1]/batch_size),
-            batch_size,
-            int(img.shape[2]/batch_size),
-            batch_size
-        ).mean(4).mean(2)
+        img = (
+            img.reshape(
+                img.shape[0],
+                int(img.shape[1] / batch_size),
+                batch_size,
+                int(img.shape[2] / batch_size),
+                batch_size,
+            )
+            .mean(4)
+            .mean(2)
+        )
 
     return img
 
-def bigger_image(img, batch_size):
 
+def bigger_image(img, batch_size):
     # Reshape the tensor using kron:
     kron_param = torch.ones(batch_size, batch_size, dtype=img.dtype)
     scaled_image = torch.kron(img, kron_param)

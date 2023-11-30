@@ -8,8 +8,9 @@ from functools import partial
 
 from src import data_loader, model_cls, train, test, plotting, submissions
 
+
 @hydra.main(version_base=None, config_path=".", config_name="config")
-def run(cfg : DictConfig) -> None:
+def run(cfg: DictConfig) -> None:
     print(OmegaConf.to_yaml(cfg))
 
     # ===== Torch config =====
@@ -47,7 +48,8 @@ def run(cfg : DictConfig) -> None:
     _, predictions = submissions.get_predictions(model, test_loader, cfg)
 
     # ===== Plotting =====
-    plotting.plot_pred_on(test_loader, predictions, cfg) 
+    plotting.plot_pred_on(test_loader, predictions, cfg)
+
 
 if __name__ == "__main__":
     run()

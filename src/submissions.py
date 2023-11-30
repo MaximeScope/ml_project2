@@ -3,7 +3,7 @@ from src import utils
 
 
 @torch.no_grad()
-def get_predictions(model, test_loader, cfg,num=None):
+def get_predictions(model, test_loader, cfg, num=None):
     model.eval()
     points = []
     for data, idxs in test_loader:

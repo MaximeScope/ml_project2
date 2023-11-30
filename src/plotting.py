@@ -4,8 +4,8 @@ import torch
 
 from src import utils
 
-def plot_random_sample(train_loader, indices=None):
 
+def plot_random_sample(train_loader, indices=None):
     # Get the length of the dataset
     dataset_size = len(train_loader.dataset)
 
@@ -14,7 +14,7 @@ def plot_random_sample(train_loader, indices=None):
         n_samples = random.randint(1, 4)
         # Generate random indices
         indices = random.sample(range(dataset_size), n_samples)
-    
+
     # Set the figure size based on the number of samples
     _, axes = plt.subplots(len(indices), 2, figsize=(8, 4))
 
@@ -28,21 +28,23 @@ def plot_random_sample(train_loader, indices=None):
 
         if len(indices) == 1:
             # Plot the original image
-            axes[0].imshow(image.permute(1, 2, 0)) # Permute to (H, W, C) for plotting
-            axes[0].set_title('Original Image')
-            axes[0].axis('off')
+            axes[0].imshow(image.permute(1, 2, 0))  # Permute to (H, W, C) for plotting
+            axes[0].set_title("Original Image")
+            axes[0].axis("off")
             # Plot the ground truth
-            axes[1].imshow(groundtruth, cmap='gray')
-            axes[1].set_title('Ground Truth')
-            axes[1].axis('off')
+            axes[1].imshow(groundtruth, cmap="gray")
+            axes[1].set_title("Ground Truth")
+            axes[1].axis("off")
         else:
-            axes[i, 0].imshow(image.permute(1, 2, 0)) # Permute to (H, W, C) for plotting
-            axes[i, 0].set_title('Original Image')
-            axes[i, 0].axis('off')
+            axes[i, 0].imshow(
+                image.permute(1, 2, 0)
+            )  # Permute to (H, W, C) for plotting
+            axes[i, 0].set_title("Original Image")
+            axes[i, 0].axis("off")
             # Plot the ground truth
-            axes[i, 1].imshow(groundtruth, cmap='gray')
-            axes[i, 1].set_title('Ground Truth')
-            axes[i, 1].axis('off')
+            axes[i, 1].imshow(groundtruth, cmap="gray")
+            axes[i, 1].set_title("Ground Truth")
+            axes[i, 1].axis("off")
 
     plt.tight_layout()
     plt.show()
@@ -54,22 +56,23 @@ def plot_prediction(img, gt, prediction):
     _, axes = plt.subplots(1, 3, figsize=(12, 4))
 
     # Plot the original image
-    axes[0].imshow(img.permute(1, 2, 0)) # Permute to (H, W, C) for plotting
-    axes[0].set_title('Original Image')
-    axes[0].axis('off')
+    axes[0].imshow(img.permute(1, 2, 0))  # Permute to (H, W, C) for plotting
+    axes[0].set_title("Original Image")
+    axes[0].axis("off")
 
     # Plot the ground truth
-    axes[1].imshow(gt, cmap='gray')
-    axes[1].set_title('Ground Truth')
-    axes[1].axis('off')
+    axes[1].imshow(gt, cmap="gray")
+    axes[1].set_title("Ground Truth")
+    axes[1].axis("off")
 
     # Plot the prediction
-    axes[2].imshow(prediction, cmap='gray')
-    axes[2].set_title('Prediction')
-    axes[2].axis('off')
+    axes[2].imshow(prediction, cmap="gray")
+    axes[2].set_title("Prediction")
+    axes[2].axis("off")
 
     plt.tight_layout()
     plt.show()
+
 
 def plot_pred_on(img, gt, prediction):
     w = gt_imgs[img_idx].shape[0]

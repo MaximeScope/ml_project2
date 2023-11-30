@@ -1,14 +1,16 @@
 from src import utils
+
+
 def train_model(model, optimizer, loss_fn, train_loader, cfg):
     train_losses = []
     train_accs = []
     for epoch in range(1, cfg.training.epochs + 1):
         avg_loss, avg_acc = train_epoch(
-            model, optimizer, loss_fn, train_loader, epoch, cfg
+            model, optimizer, loss_fn, train_loader, cfg
         )
         train_losses.append(avg_loss)
         train_accs.append(avg_acc)
-        
+
         print(
             f"Train Epoch: {epoch}"
             f"batch_loss={avg_loss:0.2e} "
@@ -16,7 +18,8 @@ def train_model(model, optimizer, loss_fn, train_loader, cfg):
         )
     return train_losses, train_accs
 
-def train_epoch(model, optimizer, loss_fn, train_loader, epoch, cfg):
+
+def train_epoch(model, optimizer, loss_fn, train_loader, cfg):
     model.train()
     batch_losses = []
     batch_accs = []
