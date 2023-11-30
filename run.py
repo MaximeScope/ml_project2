@@ -50,10 +50,10 @@ def run(cfg: DictConfig) -> None:
     predictions = submissions.get_predictions(model, test_loader, cfg)
 
     # ==== Make Submission =====
-    patched_pred = submissions.make_submission(predictions)
+    patched_preds = submissions.make_submission(predictions)
 
     # ===== Plotting =====
-    plotting.plot_pred_on(test_loader, patched_pred, 1)
+    plotting.plot_pred_on(test_loader, patched_preds, 1)
 
 
 if __name__ == "__main__":

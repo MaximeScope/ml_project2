@@ -20,6 +20,7 @@ def get_predictions(model, test_loader, cfg, num=None):
 
 def make_submission(predictions):
     output = "id,prediction\n"
+    patched_preds = []
     for idx, pred_batch in enumerate(predictions):
         patched_pred = utils.smaller_image(pred_batch, 16)
         curr_y = 0
@@ -31,8 +32,11 @@ def make_submission(predictions):
                 output += f"{idx:03d}_{curr_y}_{curr_x},{point_pred}\n"
                 curr_x += 16
             curr_y += 16
+        patched_preds.append(patched_pred)
 
     with open("submission.csv", "w") as f:
         f.write(output)
 
-    return patched_pred
+    patched_preds = utils.bigger_image(patched_preds, 16)
+    
+    return patched_preds
