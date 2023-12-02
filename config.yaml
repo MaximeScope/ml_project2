@@ -4,7 +4,7 @@ seed: 42
 tensor_dtype: 'float32'
 
 training:
-  epochs: 2
+  epochs: 20
   batch_size: 10
   lr: 1e-3
   weight_decay: 1e-4
