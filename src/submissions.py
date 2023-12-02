@@ -37,5 +37,5 @@ def make_submission(predictions, cfg):
 
     with open("submission.csv", "w") as f:
         f.write(output)
-    
+
     return patched_preds

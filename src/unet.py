@@ -5,22 +5,22 @@ import torch.nn.functional as F
 
 
 class UNet(nn.Module):
-    def __init__(self, bilinear=False):
+    def __init__(self, cfg, bilinear=False):
         super(UNet, self).__init__()
-        self.n_channels = 3
         self.bilinear = bilinear
+        self.depth = cfg.model.unet_depth
 
-        self.inc = DoubleConv(self.n_channels, 64)
-        self.down1 = Down(64, 128)
-        self.down2 = Down(128, 256)
-        self.down3 = Down(256, 512)
-        factor = 2 if self.bilinear else 1
-        self.down4 = Down(512, 1024 // factor)
-        self.up1 = Up(1024, 512 // factor, self.bilinear)
-        self.up2 = Up(512, 256 // factor, self.bilinear)
-        self.up3 = Up(256, 128 // factor, self.bilinear)
-        self.up4 = Up(128, 64, self.bilinear)
-        self.outc = OutConv(64, 1)
+        self.inc = DoubleConv(3, self.depth)
+        self.down1 = Down(self.depth, self.depth * 2)
+        self.down2 = Down(self.depth * 2, self.depth * 2**2)
+        self.down3 = Down(self.depth * 2**2, self.depth * 2**3)
+        factor = 2 if bilinear else 1
+        self.down4 = Down(self.depth * 2**3, self.depth * 2**4 // factor)
+        self.up1 = Up(self.depth * 2**4, self.depth * 2**3 // factor, bilinear)
+        self.up2 = Up(self.depth * 2**3, self.depth * 2**2 // factor, bilinear)
+        self.up3 = Up(self.depth * 2**2, self.depth * 2 // factor, bilinear)
+        self.up4 = Up(self.depth * 2, self.depth, bilinear)
+        self.outc = OutConv(self.depth, 1)
 
     def forward(self, x):
         x1 = self.inc(x)
