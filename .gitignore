@@ -170,3 +170,6 @@ outputs/
 
 # Debugger
 .vscode/
+
+# sync script
+sync.sh
