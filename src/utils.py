@@ -52,9 +52,9 @@ def smaller_image(img, patch_size):
     return img
 
 
-def bigger_image(img, patch_size):
+def bigger_image(img, cfg, patch_size):
     # Reshape the tensor using kron:
-    kron_param = torch.ones(patch_size, patch_size, dtype=img.dtype)
+    kron_param = torch.ones(patch_size, patch_size, dtype=img.dtype, device=cfg.device)
     scaled_image = torch.kron(img, kron_param)
 
     return scaled_image

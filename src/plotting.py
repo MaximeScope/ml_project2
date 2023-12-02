@@ -72,7 +72,7 @@ def plot_prediction(test_loader, pred, indice):
     plt.show()
 
 
-def plot_pred_on(test_loader, predictions, indice):
+def plot_pred_on(test_loader, predictions, indice, cfg):
     # Set the figure size based on the number of samples
     _, axes = plt.subplots(1, 2, figsize=(8, 4))
 
@@ -84,19 +84,19 @@ def plot_pred_on(test_loader, predictions, indice):
 
     # Scale the prediction to the size of the image
     if pred.shape[0] != image.shape[1] or pred.shape[1] != image.shape[2]:
-        pred = utils.bigger_image(pred, patch_size=int(image.shape[1] / pred.shape[0]))
+        pred = utils.bigger_image(pred, cfg, patch_size=int(image.shape[1] / pred.shape[0]))
 
     # Create a red-to-white colormap
     cmap = LSC.from_list("red_to_white", ["red", "white"])
 
     # Plot the original image
-    axes[0].imshow(image.permute(1, 2, 0).cpu())  # Permute to (H, W, C) for plotting
-    axes[0].imshow(groundtruth.cpu(), cmap=cmap, alpha=0.5)
+    axes[0].imshow(image.permute(1, 2, 0))  # Permute to (H, W, C) for plotting
+    axes[0].imshow(groundtruth, cmap=cmap, alpha=0.5)
     axes[0].set_title("Ground Truth")
     axes[0].axis("off")
     # Plot the ground truth
-    axes[1].imshow(image.permute(1, 2, 0).cpu())  # Permute to (H, W, C) for plotting
-    axes[1].imshow(pred.cpu(), cmap=cmap, alpha=0.5)
+    axes[1].imshow(image.permute(1, 2, 0))  # Permute to (H, W, C) for plotting
+    axes[1].imshow(pred, cmap=cmap, alpha=0.5)
     axes[1].set_title("Prediction")
     axes[1].axis("off")
 
