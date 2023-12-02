@@ -49,10 +49,13 @@ def run(cfg: DictConfig) -> None:
     # ===== Preditions =====
     predictions = submissions.get_predictions(model, test_loader, cfg)
 
+    # ===== Plotting of predicitons =====
+    plotting.plot_pred_on(test_loader, predictions, 1, cfg)
+
     # ==== Make Submission =====
     patched_preds = submissions.make_submission(predictions, cfg)
 
-    # ===== Plotting =====
+    # ===== Plotting of =====
     plotting.plot_pred_on(test_loader, patched_preds, 1, cfg)
 
 
