@@ -22,7 +22,7 @@ def run(cfg: DictConfig) -> None:
     train_loader, test_loader = data_loader.get_loader(cfg)
 
     # ===== Model, Optimizer and Loss function =====
-    model = unet.UNet()
+    model = unet.UNet(cfg)
     model = model.to(device=device)
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=cfg.training.lr, weight_decay=cfg.training.weight_decay
@@ -30,7 +30,7 @@ def run(cfg: DictConfig) -> None:
     loss_fn = torch.nn.functional.binary_cross_entropy
 
     # ===== Train Model =====
-    train_losses, train_accs = train.train_model(
+    train_losses, train_f1s = train.train_model(
         model,
         optimizer,
         loss_fn,
@@ -39,23 +39,20 @@ def run(cfg: DictConfig) -> None:
     )
 
     # ===== Test Model =====
-    test_losses, test_accuracies = test.test_model(
+    test_loss, test_f1 = test.test_model(
         model,
         device,
         test_loader,
         loss_fn=partial(loss_fn, reduction="none"),
     )
 
-    # ===== Preditions =====
-    predictions = submissions.get_predictions(model, test_loader, cfg)
-
-    # ===== Plotting of predicitons =====
-    plotting.plot_pred_on(test_loader, predictions, 1, cfg)
-
     # ==== Make Submission =====
+    predictions = submissions.get_predictions(model, test_loader, cfg)
     patched_preds = submissions.make_submission(predictions, cfg)
 
-    # ===== Plotting of patched predictions =====
+    # ===== Plotting =====
+    plotting.plot_train(train_losses, train_f1s, cfg)
+    plotting.plot_pred_on(test_loader, predictions, 1, cfg)
     plotting.plot_pred_on(test_loader, patched_preds, 1, cfg)
 
 

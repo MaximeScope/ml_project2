@@ -84,7 +84,9 @@ def plot_pred_on(test_loader, predictions, indice, cfg):
 
     # Scale the prediction to the size of the image
     if pred.shape[0] != image.shape[1] or pred.shape[1] != image.shape[2]:
-        pred = utils.bigger_image(pred, cfg, patch_size=int(image.shape[1] / pred.shape[0]))
+        pred = utils.bigger_image(
+            pred, cfg, patch_size=int(image.shape[1] / pred.shape[0])
+        )
 
     # Create a red-to-white colormap
     cmap = LSC.from_list("red_to_white", ["red", "white"])
@@ -101,4 +103,16 @@ def plot_pred_on(test_loader, predictions, indice, cfg):
     axes[1].axis("off")
 
     plt.tight_layout()
+    plt.show()
+
+
+def plot_train(train_losses, train_f1s):
+    fig, ax = plt.subplots(1, 1, figsize=(8, 4))
+    ax.plot(train_losses, color='k')
+    ax.set_xlabel("Epoch")
+    ax.set_ylabel("Loss")
+    ax2 = ax.twinx()
+    ax2.plot(train_f1s, color="red")
+    ax2.set_ylabel("F1", color="red")
+    ax2.tick_params(axis="y", labelcolor="red")
     plt.show()
