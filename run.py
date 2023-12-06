@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from functools import partial
 
 from src import data_loader, train, test, plotting, submissions, unet
+import mask_to_submission
 
 
 @hydra.main(version_base=None, config_path=".", config_name="config")
@@ -19,7 +20,7 @@ def run(cfg: DictConfig) -> None:
     torch.set_default_dtype(getattr(torch, cfg.tensor_dtype))
 
     # ===== Data Loading =====
-    train_loader, test_loader = data_loader.get_loader(cfg)
+    train_loader, cross_test_loader = data_loader.get_loader(cfg)
 
     # ===== Model, Optimizer and Loss function =====
     model = unet.UNet(cfg)
@@ -39,21 +40,24 @@ def run(cfg: DictConfig) -> None:
     )
 
     # ===== Test Model =====
-    test_loss, test_f1 = test.test_model(
-        model,
-        device,
-        test_loader,
-        loss_fn=partial(loss_fn, reduction="none"),
-    )
+    # test_loss, test_f1 = test.test_model(
+    #     model,
+    #     device,
+    #     test_loader,
+    #     loss_fn=partial(loss_fn, reduction="none"),
+    # )
 
     # ==== Make Submission =====
+    test_loader = data_loader.get_test_loader(cfg)
     predictions = submissions.get_predictions(model, test_loader, cfg)
-    patched_preds = submissions.make_submission(predictions, cfg)
+    img_filenames = submissions.save_prediction_masks(predictions, test_loader, "predictions")
+    #patched_preds = submissions.make_submission(predictions, cfg)
+    mask_to_submission.masks_to_submission("submission.csv", *img_filenames)
 
     # ===== Plotting =====
-    plotting.plot_train(train_losses, train_f1s, cfg)
+    plotting.plot_train(train_losses, train_f1s)
     plotting.plot_pred_on(test_loader, predictions, 1, cfg)
-    plotting.plot_pred_on(test_loader, patched_preds, 1, cfg)
+    #plotting.plot_pred_on(test_loader, patched_preds, 1, cfg)
 
 
 if __name__ == "__main__":

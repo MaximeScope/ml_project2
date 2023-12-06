@@ -29,7 +29,7 @@ def test_model(model, device, test_loader, loss_fn):
     gts = torch.stack(gts)
     avg_loss = loss_fn(predictions, gts)
     avg_f1 = utils.get_f1(predictions, gts)
-    print(f"Test set: Average loss: {avg_loss:0.2e}, f1: {avg_f1:0.3f}")
+    #print(f"Test set: Average loss: {avg_loss:0.2e}, f1: {avg_f1:0.3f}")
     return avg_loss, avg_f1
 
 
