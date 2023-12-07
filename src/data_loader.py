@@ -51,27 +51,27 @@ def get_loader(cfg):
     dataset = torch_loader(root=data_root, transform=transform)
 
     # Define the sizes for training and testing sets
-    train_size = int(0.8 * len(dataset))
-    test_size = len(dataset) - train_size
+    #train_size = int(0.8 * len(dataset))
+    #test_size = len(dataset) - train_size
 
     # Split the dataset
-    train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
+    #train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
 
     # Create DataLoader for training set
     train_loader = DataLoader(
-        train_dataset,
+        dataset,
         batch_size=cfg.training.batch_size,
         shuffle=True,
     )
 
-    # Create DataLoader for testing set
-    test_loader = DataLoader(
-        test_dataset,
-        batch_size=cfg.training.batch_size,
-        shuffle=False,
-    )
+    # # Create DataLoader for testing set
+    # test_loader = DataLoader(
+    #     test_dataset,
+    #     batch_size=cfg.training.batch_size,
+    #     shuffle=False,
+    # )
 
-    return train_loader, test_loader
+    return train_loader
 
 
 def test_data_loader(root, transform):
