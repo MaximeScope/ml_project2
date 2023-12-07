@@ -5,10 +5,10 @@ seed: 42
 tensor_dtype: 'float32'
 
 model:
-  unet_depth: 16
+  unet_depth: 32
 
 training:
-  epochs: 50
+  epochs: 100
   batch_size: 10
   lr: 1e-3
   weight_decay: 1e-4

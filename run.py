@@ -30,12 +30,14 @@ def run(cfg: DictConfig) -> None:
     )
     loss_fn = torch.nn.functional.binary_cross_entropy
 
+    #train.optimize_param(loss_fn, 5, "lr", np.logspace(-3.6, -2.6, 5), 1e-4, cfg)
     # ===== Train Model =====
     train_losses, train_f1s = train.train_model(
         model,
         optimizer,
         loss_fn,
         train_loader,
+        cfg.training.epochs,
         cfg,
     )
 

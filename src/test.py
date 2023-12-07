@@ -14,23 +14,26 @@ validation, instead of using a testing-validating set.
 
 
 @torch.no_grad()
-def test_model(model, device, test_loader, loss_fn):
+def test_model(model, device, test_loader):
     model.eval()
-    predictions = []
-    gts = []
+    #predictions = []
+    #gts = []
+    batch_f1s = []
     print("Testing...")
     for img_batch, gt_batch in tqdm(test_loader):
         img_batch, gt_batch = img_batch.to(device), gt_batch.to(device)
         pred = model(img_batch)
 
-        predictions.extend(pred)
-        gts.extend(gt_batch)
-    predictions = torch.stack(predictions)
-    gts = torch.stack(gts)
-    avg_loss = loss_fn(predictions, gts)
-    avg_f1 = utils.get_f1(predictions, gts)
+        #predictions.extend(pred)
+        #gts.extend(gt_batch)
+        f1 = utils.get_f1(pred, gt_batch)
+        batch_f1s.append(f1)
+    #predictions = torch.stack(predictions)
+    #gts = torch.stack(gts)
+    #avg_loss = loss_fn(predictions, gts)
+    avg_f1 = sum(batch_f1s) / len(batch_f1s)
     #print(f"Test set: Average loss: {avg_loss:0.2e}, f1: {avg_f1:0.3f}")
-    return avg_loss, avg_f1
+    return avg_f1.item()
 
 
 # @torch.no_grad()
