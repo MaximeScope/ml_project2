@@ -107,7 +107,7 @@ def test_data_loader(root, transform):
 
 
 def get_test_loader(cfg):
-    data_root = cfg.test_data_path
+    data_root = os.path.join(cfg.data_path, 'test_set_images')
     transform = transforms.Compose([transforms.ToTensor()])
 
     dataset = test_data_loader(root=data_root, transform=transform)

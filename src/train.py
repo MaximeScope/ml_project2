@@ -1,8 +1,8 @@
 import torch.optim
+import torch.nn as nn
 
 from src import utils, data_loader, test, unet
 from tqdm import tqdm
-
 
 def optimize_param(loss_fn, iterations, param_to_optimize, param_vals, other_param, cfg):
     if param_to_optimize == "lr":
@@ -57,9 +57,15 @@ def train_epoch(model, optimizer, loss_fn, train_loader, cfg):
     model.train()
     batch_losses = []
     batch_f1s = []
+    up = nn.Upsample(size=(608, 608))
     for batch_idx, (img_batch, gt_batch) in enumerate(tqdm(train_loader), start=1):
         img_batch = img_batch.to(cfg.device)
         gt_batch = gt_batch.to(cfg.device)
+        # Upsample
+        if cfg.training.upsample_to_test_size:
+            img_batch = up(img_batch) 
+            gt_batch = up(gt_batch.unsqueeze(1)).squeeze(1)
+
         output = model(img_batch)
         loss = loss_fn(output, gt_batch)
         f1 = utils.get_f1(output, gt_batch)

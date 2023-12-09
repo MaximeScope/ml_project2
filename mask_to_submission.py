@@ -33,7 +33,8 @@ def mask_to_submission_strings(image_filename):
 
 def masks_to_submission(submission_filename, *image_filenames):
     """Converts images into a submission file"""
-    with open(submission_filename, "w") as f:
+    path = os.join.path(os.getcwd(), submission_filename)
+    with open(path, "w") as f:
         f.write("id,prediction\n")
         for fn in image_filenames[0:]:
             f.writelines("{}\n".format(s) for s in mask_to_submission_strings(fn))

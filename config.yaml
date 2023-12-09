@@ -1,6 +1,6 @@
 device: 'cpu'
 data_path: './data'
-test_data_path: './data/test_set_images'
+#data_path: '/content/drive/MyDrive/Colab Notebooks/ml_project2/data'
 seed: 42
 tensor_dtype: 'float32'
 
@@ -10,5 +10,6 @@ model:
 training:
   epochs: 100
   batch_size: 10
+  upsample_to_test_size: True
   lr: 1e-3
   weight_decay: 1e-4

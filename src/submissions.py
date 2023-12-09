@@ -28,6 +28,7 @@ def save_prediction_masks(predictions, test_loader, path):
         img_index = test_loader.dataset.image_indices[i]
         transform = T.ToPILImage()
         mask = transform(prediction)
+        path = os.path.join(os.getcwd(), path)
         img_filename = os.path.join(path, "mask_" + str(img_index) + ".png")
         img_filenames.append(img_filename)
         mask.save(img_filename)
