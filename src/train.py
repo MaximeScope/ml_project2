@@ -27,7 +27,8 @@ def optimize_param(loss_fn, iterations, param_to_optimize, param_vals, other_par
         f1_sum = 0
         for _ in range(iterations):
             train_loader, test_loader = data_loader.get_loader(cfg)
-            train_model(model, optimizer, loss_fn, train_loader, 1, cfg)
+            train_loader_extended = utils.data_expension(train_loader)
+            train_model(model, optimizer, loss_fn, train_loader_extended, 1, cfg)
             f1_score = test.test_model(model, cfg.device, test_loader)
             f1_sum += f1_score
 
@@ -42,10 +43,12 @@ def optimize_param(loss_fn, iterations, param_to_optimize, param_vals, other_par
 
 
 def train_model(model, optimizer, loss_fn, train_loader, epochs, cfg):
+    train_loader_extended = utils.data_expension(train_loader)
+
     train_losses = []
     train_f1s = []
     for epoch in range(1, epochs + 1):
-        avg_loss, avg_acc = train_epoch(model, optimizer, loss_fn, train_loader, cfg)
+        avg_loss, avg_acc = train_epoch(model, optimizer, loss_fn, train_loader_extended, cfg)
         train_losses.append(avg_loss)
         train_f1s.append(avg_acc)
 

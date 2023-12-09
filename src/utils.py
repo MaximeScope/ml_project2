@@ -1,4 +1,5 @@
 import torch
+from torchvision.transforms.functional import rotate
 
 
 @torch.no_grad()
