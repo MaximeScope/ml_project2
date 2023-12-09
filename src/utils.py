@@ -1,5 +1,5 @@
 import torch
-from torchvision.transforms.functional import rotate
+from torchvision.transforms.functional import rotate, to_pil_image, to_tensor
 
 
 @torch.no_grad()
@@ -60,17 +60,19 @@ def bigger_image(img, cfg, patch_size):
 
     return scaled_image
 
-def data_expension(loader):
-    """
-    Expends the dataset by rotating the images and the groundtruths
-    """
-    loader_expended = loader.copy()
+# def rotate_batch(image, amount, dims):
+#     """
+#     Expends the dataset by rotating the images and the groundtruths
+#     """
 
-    for i in range(len(loader.dataset)):
-        image, groundtruth = loader.dataset[i]
-        for angle in [90, 180, 270]:
-            image_rotated = rotate(image, angle)
-            groundtruth_rotated = rotate(groundtruth, angle)
-            loader_expended.dataset.append((image_rotated, groundtruth_rotated))
+#     # rotation_matrices = [
+#     #     torch.tensor([[0, -1], [1, 0]]),
+#     #     torch.tensor([[-1, 0], [0, -1]]),
+#     #     torch.tensor([[0, 1], [-1, 0]])
+#     # ]
 
-    return loader_expended
+#     print(image.shape)
+
+#     image_rotated = torch.rot90(image, k=amount, dims=dims)
+
+#     return image_rotated
