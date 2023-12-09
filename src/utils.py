@@ -59,20 +59,3 @@ def bigger_image(img, cfg, patch_size):
     scaled_image = torch.kron(img, kron_param)
 
     return scaled_image
-
-# def rotate_batch(image, amount, dims):
-#     """
-#     Expends the dataset by rotating the images and the groundtruths
-#     """
-
-#     # rotation_matrices = [
-#     #     torch.tensor([[0, -1], [1, 0]]),
-#     #     torch.tensor([[-1, 0], [0, -1]]),
-#     #     torch.tensor([[0, 1], [-1, 0]])
-#     # ]
-
-#     print(image.shape)
-
-#     image_rotated = torch.rot90(image, k=amount, dims=dims)
-
-#     return image_rotated

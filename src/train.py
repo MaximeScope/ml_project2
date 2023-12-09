@@ -59,48 +59,6 @@ def train_epoch(model, optimizer, loss_fn, train_loader, cfg):
     model.train()
     batch_losses = []
     batch_f1s = []
-    # train_loader_extended = []
-
-    # for (img_batch, gt_batch) in train_loader:
-    #     train_loader_extended.append((img_batch, gt_batch))
-    #     for amount in [1, 2, 3]:
-    #         img_rot = utils.rotate_batch(img_batch, amount, dims=(2, 3))
-    #         gt_rot = utils.rotate_batch(gt_batch, amount, dims=(1, 2))
-    #         train_loader_extended.append((img_rot, gt_rot))
-
-    # indices=[1, 2, 3, 4, 5]
-    # # Set the figure size based on the number of samples
-    # _, axes = plt.subplots(len(indices), 2, figsize=(8, 4))
-
-    # for i, idx in enumerate(indices):
-    #     # Get the sample using the generated index
-    #     image, groundtruth = train_loader_extended[idx]
-
-    #     if len(indices) == 1:
-    #         # Plot the original image
-    #         axes[0].imshow(image[0].permute(1, 2, 0))  # Permute to (H, W, C) for plotting
-    #         axes[0].set_title("Original Image")
-    #         axes[0].axis("off")
-    #         # Plot the ground truth
-    #         axes[1].imshow(groundtruth[0], cmap="gray")
-    #         axes[1].set_title("Ground Truth")
-    #         axes[1].axis("off")
-    #     else:
-    #         axes[i, 0].imshow(
-    #             image[0].permute(1, 2, 0)
-    #         )  # Permute to (H, W, C) for plotting
-    #         axes[i, 0].set_title("Original Image")
-    #         axes[i, 0].axis("off")
-    #         # Plot the ground truth
-    #         axes[i, 1].imshow(groundtruth[0], cmap="gray")
-    #         axes[i, 1].set_title("Ground Truth")
-    #         axes[i, 1].axis("off")
-
-    # plt.tight_layout()
-    # plt.show()
-    
-    # # shuffle train_loader_extended
-    # random.shuffle(train_loader_extended)
 
     for batch_idx, (img_batch, gt_batch) in enumerate(tqdm(train_loader), start=1):
         img_batch = img_batch.to(cfg.device)
