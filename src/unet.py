@@ -23,7 +23,9 @@ class UNet(nn.Module):
         self.outc = OutConv(self.depth, 1)
 
     def forward(self, x):
-        x1 = self.inc(x)
+        norm = nn.LayerNorm([x.size(dim=2), x.size(dim=3)])
+        x0 = norm(x)
+        x1 = self.inc(x0)
         x2 = self.down1(x1)
         x3 = self.down2(x2)
         x4 = self.down3(x3)

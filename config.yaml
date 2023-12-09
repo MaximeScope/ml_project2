@@ -5,7 +5,7 @@ seed: 42
 tensor_dtype: 'float32'
 
 model:
-  unet_depth: 32
+  unet_depth: 16
 
 training:
   epochs: 100

@@ -20,7 +20,7 @@ def run(cfg: DictConfig) -> None:
     torch.set_default_dtype(getattr(torch, cfg.tensor_dtype))
 
     # ===== Data Loading =====
-    train_loader, cross_test_loader = data_loader.get_loader(cfg)
+    train_loader = data_loader.get_loader(cfg)
 
     # ===== Model, Optimizer and Loss function =====
     model = unet.UNet(cfg)
