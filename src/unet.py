@@ -22,7 +22,17 @@ class UNet(nn.Module):
         self.up4 = Up(self.depth * 2, self.depth, bilinear)
         self.outc = OutConv(self.depth, 1)
 
+        # Define Sobel filter kernels
+        self.sobel_x = (
+            torch.tensor([[1, 0, -1], [2, 0, -2], [1, 0, -1]], dtype=torch.float32)
+        ).repeat(3, 1, 1).unsqueeze_(1)
+        self.sobel_y = (
+            torch.tensor([[1, 2, 1], [0, 0, 0], [-1, -2, -1]], dtype=torch.float32)
+            .unsqueeze_(0)
+        ).repeat(3, 1, 1).unsqueeze_(1)
+
     def forward(self, x):
+        x0 = self.add_features(x)
         x1 = self.inc(x)
         x2 = self.down1(x1)
         x3 = self.down2(x2)
@@ -37,6 +47,16 @@ class UNet(nn.Module):
         logits = torch.squeeze(logits, dim=1)
         return logits
 
+    def add_features(self, x):
+        # Add features to the input image
+        # Sobel filter
+        sobel_x = F.conv2d(x, self.sobel_x, groups=3, padding=1)
+        sobel_y = F.conv2d(x, self.sobel_y, groups=3, padding=1)
+        # Magnitude of the gradient
+        sobel = torch.sqrt(sobel_x**2 + sobel_y**2)
+        # Add the features to the input image
+        x = torch.cat((x, sobel_x, sobel_y, sobel), dim=1)
+        return x
 
 class DoubleConv(nn.Module):
     """(convolution => [BN] => ReLU) * 2"""
