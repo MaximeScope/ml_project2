@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from functools import partial
 
-from src import data_loader, train, test, plotting, submissions, unet
+from src import data_loader, train, test, plotting, submissions, unet, utils
 import mask_to_submission
 
 
@@ -20,7 +20,9 @@ def run(cfg: DictConfig) -> None:
     torch.set_default_dtype(getattr(torch, cfg.tensor_dtype))
 
     # ===== Data Loading =====
-    train_loader, cross_test_loader = data_loader.get_loader(cfg)
+    train_loader = data_loader.get_loader(cfg)
+
+    plotting.plot_random_sample(train_loader, indices=[1, 2, 3, 4, 5])
 
     # ===== Model, Optimizer and Loss function =====
     model = unet.UNet(cfg)
