@@ -58,18 +58,3 @@ def bigger_image(img, cfg, patch_size):
     scaled_image = torch.kron(img, kron_param)
 
     return scaled_image
-
-def data_expension(loader):
-    """
-    Expends the dataset by rotating the images and the groundtruths
-    """
-    loader_expended = loader.copy()
-
-    for i in range(len(loader.dataset)):
-        image, groundtruth = loader.dataset[i]
-        for angle in [90, 180, 270]:
-            image_rotated = rotate(image, angle)
-            groundtruth_rotated = rotate(groundtruth, angle)
-            loader_expended.dataset.append((image_rotated, groundtruth_rotated))
-
-    return loader_expended
