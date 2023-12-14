@@ -1,6 +1,8 @@
 device: 'cpu'
 data_path: './data'
 #data_path: '/content/drive/MyDrive/Colab Notebooks/ml_project2/data'
+submission_path: './submission'
+#submission_path: '/content/drive/MyDrive/Colab Notebooks/ml_project2/submission'
 seed: 42
 tensor_dtype: 'float32'
 
