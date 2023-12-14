@@ -2,6 +2,8 @@ import torch.optim
 
 from src import utils, data_loader, test, unet
 from tqdm import tqdm
+import matplotlib.pyplot as plt
+import random
 
 
 def optimize_param(loss_fn, iterations, param_to_optimize, param_vals, other_param, cfg):
@@ -57,6 +59,7 @@ def train_epoch(model, optimizer, loss_fn, train_loader, cfg):
     model.train()
     batch_losses = []
     batch_f1s = []
+
     for batch_idx, (img_batch, gt_batch) in enumerate(tqdm(train_loader), start=1):
         img_batch = img_batch.to(cfg.device)
         gt_batch = gt_batch.to(cfg.device)

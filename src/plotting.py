@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap as LSC
 import random
-import torch
 
 from src import utils
 
