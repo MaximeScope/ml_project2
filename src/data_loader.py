@@ -3,13 +3,13 @@ import os
 from PIL import Image
 
 import torch
-from torch.utils.data import Dataset, DataLoader, random_split
+from torch.nn.functional import conv2d
 from torchvision import transforms
-
+from torch.utils.data import Dataset, DataLoader 
 
 def torch_loader(root, transform):
     class TheDataset(Dataset):
-        def __init__(self, root, transform=None, *args, **kwargs):
+        def __init__(self, root, cfg, transform=None, *args, **kwargs):
             super(TheDataset, self).__init__(*args, **kwargs)
             self.root = root
             self.transform = transform
@@ -18,12 +18,14 @@ def torch_loader(root, transform):
             self.image_filenames = [
                 f for f in os.listdir(self.image_folder) if f.endswith(".png")
             ]
-            
+
+            # brightness, noise, contrast and road obstacle augmentation 
             self.mod_indices = torch.randperm(400)
-            # Pick 40 images for brightness change
-            self.br_indices = self.mod_indices[:20]
-            self.noise_indices = self.mod_indices[20:40]
-            self.ct_indices = self.mod_indices[40:60]
+            self.br_indices = self.mod_indices[:cfg.aug.num_br]
+            self.noise_indices = self.mod_indices[cfg.aug.num_br:cfg.aug.num_noise]
+            self.ct_indices = self.mod_indices[cfg.aug.num_noise:cfg.aug.num_ct]
+            self.obs_indices = self.mod_indices[cfg.aug.num_ct:cfg.aug.num_obs]
+
             self.br_factor = []
             self.br_direction = []
             for i in range(len(self.br_indices)):
@@ -39,6 +41,20 @@ def torch_loader(root, transform):
             for i in range(len(self.ct_indices)):
                 # Set the contrast level randomly between -30% and 30%
                 self.ct_factor.append(torch.rand(1).item() * 0.6 - 0.3)
+
+            # Define Sobel filter kernels
+            self.sobel_x = (
+                torch.tensor([[1, 0, -1], [2, 0, -2], [1, 0, -1]], dtype=torch.float32)
+                .unsqueeze_(0)
+                .unsqueeze_(0)
+            )
+            self.sobel_y = (
+                torch.tensor([[1, 2, 1], [0, 0, 0], [-1, -2, -1]], dtype=torch.float32)
+                .unsqueeze_(0)
+                .unsqueeze_(0)
+            )
+            self.obs_size = (30, 30)
+            self.num_obs = 5
 
         def __len__(self):
             return len(self.image_filenames * 4)
@@ -98,6 +114,29 @@ def torch_loader(root, transform):
                 # Clip the values to be in the valid range [0, 1]
                 image = torch.clamp(image, 0, 1)
 
+            # Adding road obstacles
+            if idx in self.obs_indices:
+                grad_x = conv2d(torch.unsqueeze(gt, 0), self.sobel_x)
+                grad_y = conv2d(torch.unsqueeze(gt, 0), self.sobel_y)
+                sobel = torch.sqrt(grad_x.pow(2) + grad_y.pow(2)).squeeze_(0)
+
+                # get indexes of non-zero elements
+                ids = torch.nonzero(sobel)
+
+                # pick num_obs random indexes
+                obs_ids = ids[torch.randint(0, len(ids), (self.num_obs,))]
+
+                # pick a random color 
+                color = np.random.uniform(0, 1, (3,))
+
+                # replace pixels around the index with 0
+                for channel in range(3):
+                    for i in range(-self.obs_size[0] // 2, self.obs_size[0] // 2 + 1):
+                        for j in range(-self.obs_size[1] // 2, self.obs_size[1] // 2 + 1):
+                            for idx in obs_ids:
+                                # check if the index is within the image
+                                if idx[0] + i < image.shape[1] and idx[1] + j < image.shape[2]:
+                                    image[channel, idx[0] + i, idx[1] + j] = color[channel]
             return image, gt
 
     dataset = TheDataset(root=root, transform=transform)

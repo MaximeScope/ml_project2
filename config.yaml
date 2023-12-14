@@ -6,6 +6,16 @@ submission_path: './submission'
 seed: 42
 tensor_dtype: 'float32'
 
+augmentation:
+  # number of augmented images from total of 400
+  num_br: 20
+  num_noise: 20
+  num_ct: 20
+  num_obs: 20
+
+  
+
+
 model:
   unet_depth: 16
   sobel_filter: False
