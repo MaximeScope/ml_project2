@@ -22,7 +22,7 @@ def run(cfg: DictConfig) -> None:
     # ===== Data Loading =====
     train_loader = data_loader.get_loader(cfg)
 
-    plotting.plot_random_sample(train_loader, indices=[1, 2, 3, 4, 5])
+    plotting.plot_random_sample(train_loader, indices=[109, 293])
 
     # ===== Model, Optimizer and Loss function =====
     model = unet.UNet(cfg)
