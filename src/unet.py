@@ -10,7 +10,7 @@ class UNet(nn.Module):
         self.bilinear = bilinear
         self.depth = cfg.model.unet_depth
 
-        self.inc = DoubleConv(3, self.depth)
+        self.inc = DoubleConv(6, self.depth)
         self.down1 = Down(self.depth, self.depth * 2)
         self.down2 = Down(self.depth * 2, self.depth * 2**2)
         self.down3 = Down(self.depth * 2**2, self.depth * 2**3)
@@ -24,16 +24,16 @@ class UNet(nn.Module):
 
         # Define Sobel filter kernels
         self.sobel_x = (
-            torch.tensor([[1, 0, -1], [2, 0, -2], [1, 0, -1]], dtype=torch.float32)
+            torch.tensor([[1, 0, -1], [2, 0, -2], [1, 0, -1]], dtype=torch.float32, device=cfg.device)
         ).repeat(3, 1, 1).unsqueeze_(1)
         self.sobel_y = (
-            torch.tensor([[1, 2, 1], [0, 0, 0], [-1, -2, -1]], dtype=torch.float32)
+            torch.tensor([[1, 2, 1], [0, 0, 0], [-1, -2, -1]], dtype=torch.float32, device=cfg.device)
             .unsqueeze_(0)
         ).repeat(3, 1, 1).unsqueeze_(1)
 
     def forward(self, x):
         x0 = self.add_features(x)
-        x1 = self.inc(x)
+        x1 = self.inc(x0)
         x2 = self.down1(x1)
         x3 = self.down2(x2)
         x4 = self.down3(x3)
@@ -55,7 +55,7 @@ class UNet(nn.Module):
         # Magnitude of the gradient
         sobel = torch.sqrt(sobel_x**2 + sobel_y**2)
         # Add the features to the input image
-        x = torch.cat((x, sobel_x, sobel_y, sobel), dim=1)
+        x = torch.cat((x, sobel), dim=1)
         return x
 
 class DoubleConv(nn.Module):
