@@ -117,8 +117,7 @@ def get_test_loader(cfg):
 
     dataset = test_data_loader(root=data_root, transform=transform)
 
-    batch_size = 32
     # Create DataLoader for testing set
-    test_loader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
+    test_loader = DataLoader(dataset, batch_size=cfg.training.batch_size, shuffle=False)
 
     return test_loader

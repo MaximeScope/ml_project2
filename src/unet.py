@@ -9,8 +9,12 @@ class UNet(nn.Module):
         super(UNet, self).__init__()
         self.bilinear = bilinear
         self.depth = cfg.model.unet_depth
+        self.sobel_filter = cfg.model.sobel
 
-        self.inc = DoubleConv(6, self.depth)
+        if cfg.model.sobel:
+            self.inc = DoubleConv(6, self.depth)
+        else:
+            self.inc = DoubleConv(3, self.depth)
         self.down1 = Down(self.depth, self.depth * 2)
         self.down2 = Down(self.depth * 2, self.depth * 2**2)
         self.down3 = Down(self.depth * 2**2, self.depth * 2**3)
@@ -32,8 +36,9 @@ class UNet(nn.Module):
         ).repeat(3, 1, 1).unsqueeze_(1)
 
     def forward(self, x):
-        x0 = self.add_features(x)
-        x1 = self.inc(x0)
+        if self.model.sobel_fitler:
+            x = self.add_features(x)
+        x1 = self.inc(x)
         x2 = self.down1(x1)
         x3 = self.down2(x2)
         x4 = self.down3(x3)

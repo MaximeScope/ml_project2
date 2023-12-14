@@ -8,6 +8,7 @@ tensor_dtype: 'float32'
 
 model:
   unet_depth: 16
+  sobel_filter: False
 
 training:
   epochs: 2
