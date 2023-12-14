@@ -3,6 +3,9 @@ import torch.nn as nn
 
 from src import utils, data_loader, test, unet
 from tqdm import tqdm
+import matplotlib.pyplot as plt
+import random
+
 
 def optimize_param(loss_fn, iterations, param_to_optimize, param_vals, other_param, cfg):
     if param_to_optimize == "lr":

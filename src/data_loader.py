@@ -20,12 +20,13 @@ def torch_loader(root, transform):
             ]
 
         def __len__(self):
-            return len(self.image_filenames)
+            return len(self.image_filenames * 4)
 
         def __getitem__(self, idx):
-            img_name = os.path.join(self.image_folder, self.image_filenames[idx])
+            id = idx // 4
+            img_name = os.path.join(self.image_folder, self.image_filenames[id])
             gt_name = os.path.join(
-                self.gt_folder, self.image_filenames[idx]
+                self.gt_folder, self.image_filenames[id]
             )  # gt standing for groundtruth
 
             image = Image.open(img_name).convert("RGB")
@@ -36,6 +37,10 @@ def torch_loader(root, transform):
 
             # Convert ground truth to binary mask (streets in white, everything else in black)
             gt = torch.tensor(np.array(gt) > 128, dtype=torch.float32)
+
+            if idx % 4 != 0:
+                image = torch.rot90(image, k=idx % 4, dims=(1, 2))
+                gt = torch.rot90(gt, k=idx % 4, dims=(0, 1))
 
             return image, gt
 

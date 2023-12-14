@@ -10,7 +10,7 @@ model:
   unet_depth: 16
 
 training:
-  epochs: 100
+  epochs: 2
   batch_size: 10
   upsample_to_test_size: True
   lr: 1e-3
