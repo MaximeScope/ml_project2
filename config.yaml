@@ -1,27 +1,24 @@
 device: 'cpu'
-data_path: './data'
+data_path: '/home/angelo/git/ml_project2/data'
 #data_path: '/content/drive/MyDrive/Colab Notebooks/ml_project2/data'
-submission_path: './submission'
+submission_path: '/home/angelo/git/ml_project2/submission'
 #submission_path: '/content/drive/MyDrive/Colab Notebooks/ml_project2/submission'
 seed: 42
 tensor_dtype: 'float32'
 
-augmentation:
+aug:
   # number of augmented images from total of 400
   num_br: 20
   num_noise: 20
   num_ct: 20
   num_obs: 20
 
-  
-
-
 model:
-  unet_depth: 16
+  unet_depth: 1
   sobel_filter: False
 
 training:
-  epochs: 2
+  epochs: 1
   batch_size: 10
   upsample_to_test_size: True
   lr: 1e-3

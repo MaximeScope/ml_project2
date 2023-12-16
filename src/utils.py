@@ -16,7 +16,7 @@ def get_f1(predictions, gts):
     fp = torch.sum(predictions_tresholded * (1 - gts))
     fn = torch.sum((1 - predictions_tresholded) * gts)
     f1 = 2 * tp / (2 * tp + fp + fn)
-    return f1
+    return f1.item()
 
 
 # Make bigger pixels of size patch_size x patch_size

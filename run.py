@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from functools import partial
 
-from src import data_loader, train, test, plotting, submissions, unet, utils
+from src import data_loader, train, test, plotting, submissions, unet
 import mask_to_submission
 
 
@@ -21,8 +21,6 @@ def run(cfg: DictConfig) -> None:
 
     # ===== Data Loading =====
     train_loader = data_loader.get_loader(cfg)
-
-    plotting.plot_random_sample(train_loader, indices=[109, 293])
 
     # ===== Model, Optimizer and Loss function =====
     model = unet.UNet(cfg)
@@ -54,9 +52,9 @@ def run(cfg: DictConfig) -> None:
     # ==== Make Submission =====
     test_loader = data_loader.get_test_loader(cfg)
     predictions = submissions.get_predictions(model, test_loader, cfg)
-    img_filenames = submissions.save_prediction_masks(predictions, test_loader, "predictions")
+    img_filenames = submissions.save_prediction_masks(predictions, test_loader, cfg)
     #patched_preds = submissions.make_submission(predictions, cfg)
-    mask_to_submission.masks_to_submission("submission.csv", *img_filenames)
+    mask_to_submission.masks_to_submission("submission.csv", cfg, *img_filenames)
 
     # ===== Plotting =====
     plotting.plot_train(train_losses, train_f1s)

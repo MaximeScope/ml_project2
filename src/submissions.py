@@ -22,16 +22,17 @@ def get_predictions(model, test_loader, cfg, num=None):
     return predictions
 
 
-def save_prediction_masks(predictions, test_loader, path):
+def save_prediction_masks(predictions, test_loader, cfg):
     img_filenames = []
     for i, prediction in enumerate(predictions):
         img_index = test_loader.dataset.image_indices[i]
         transform = T.ToPILImage()
         mask = transform(prediction)
-        path = os.path.join(os.getcwd(), path)
-        img_filename = os.path.join(path, "mask_" + str(img_index) + ".png")
+        if not os.path.exists(cfg.submission_path):
+            os.makedirs(cfg.submission_path)
+        img_filename = "mask_" + str(img_index) + ".png"
         img_filenames.append(img_filename)
-        mask.save(img_filename)
+        mask.save(os.path.join(cfg.submission_path, img_filename))
 
     return img_filenames
 
