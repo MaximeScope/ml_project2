@@ -1,7 +1,7 @@
 device: 'cpu'
-data_path: '/home/angelo/git/ml_project2/data'
+data_path: './data'
 #data_path: '/content/drive/MyDrive/Colab Notebooks/ml_project2/data'
-submission_path: '/home/angelo/git/ml_project2/submission'
+submission_path: './submission'
 #submission_path: '/content/drive/MyDrive/Colab Notebooks/ml_project2/submission'
 seed: 42
 tensor_dtype: 'float32'
@@ -21,6 +21,12 @@ augmentation:
     n_img: 20 # number of images to apply the contrast to
     min: -0.3
     max: 0.3
+  obs: # obstacles
+    n_img: 20 # number of images to apply the obstacles to
+    n_obs: 5
+    size: # x and y size in pixels
+      - 20
+      - 20
 
 model:
   unet_depth: 1
