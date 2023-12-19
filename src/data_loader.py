@@ -147,7 +147,7 @@ class AugDataset(Dataset):
             # pick a random color 
             color = np.random.uniform(0, 1, (3,))
 
-            # replace pixels around the index with 0
+            # add the obstacles to the image
             for channel in range(3):
                 for i in range(-self.obs_size[0] // 2, self.obs_size[0] // 2 + 1):
                     for j in range(-self.obs_size[1] // 2, self.obs_size[1] // 2 + 1):

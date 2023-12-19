@@ -60,7 +60,7 @@ def train_epoch(model, optimizer, loss_fn, train_loader, cfg):
     model.train()
     batch_losses = []
     batch_f1s = []
-    up = nn.Upsample(size=(608, 608))
+    up = nn.Upsample(size=(608, 608), mode='bilinear')
     for batch_idx, (img_batch, gt_batch) in enumerate(tqdm(train_loader), start=1):
         img_batch = img_batch.to(cfg.device)
         gt_batch = gt_batch.to(cfg.device)
