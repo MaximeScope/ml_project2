@@ -7,6 +7,7 @@ seed: 42
 tensor_dtype: 'float32'
 
 augmentation:
+  rot: True # Activates rotations or not
   br: # brightness gradient
     n_img: 20 # number of images to apply the brightness to
     min_d: 0.1 # minimum darkness
