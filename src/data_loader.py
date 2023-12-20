@@ -20,6 +20,7 @@ class AugDataset(Dataset):
         super(Dataset, self).__init__(*args, **kwargs)
         self.root = root
         self.transform = transform
+        self.do_rotate = aug.rot
         self.image_folder = os.path.join(root, "training", "images")
         self.gt_folder = os.path.join(root, "training", "groundtruth")
         self.image_filenames = [
@@ -75,10 +76,13 @@ class AugDataset(Dataset):
         self.num_obs = aug.obs.n_obs
 
     def __len__(self):
-        return len(self.image_filenames * 4)
+        if self.do_rotate:
+            return len(self.image_filenames * 4)
+        else:
+            return len(self.image_filenames)
 
     def __getitem__(self, idx):
-        id = idx // 4
+        id = idx // 4 if self.do_rotate else idx
         img_name = os.path.join(self.image_folder, self.image_filenames[id])
         gt_name = os.path.join(
             self.gt_folder, self.image_filenames[id]
@@ -93,7 +97,7 @@ class AugDataset(Dataset):
         # Convert ground truth to binary mask (streets in white, everything else in black)
         gt = torch.tensor(np.array(gt) > 128, dtype=torch.float32)
 
-        if idx % 4 == 1 or idx % 4 == 2 or idx % 4 == 3:
+        if self.do_rotate and (idx % 4 == 1 or idx % 4 == 2 or idx % 4 == 3):
             # Rotate image and ground truth by 90 degrees
             image = torch.rot90(image, k=idx % 4, dims=(1, 2))
             gt = torch.rot90(gt, k=idx % 4, dims=(0, 1))
