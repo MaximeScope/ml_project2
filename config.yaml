@@ -8,33 +8,29 @@ tensor_dtype: 'float32'
 
 augmentation:
   br: # brightness gradient
-    n_img: 20 # number of images to apply the brightness to
     min_d: 0.1 # minimum darkness
     max_d: 0.4 # maximum darkness
     min_b: 0.1 # minimum brightness
     max_b: 0.4 # minimum brightness
   noise:
-    n_img: 20 # number of images to apply the noise to
     min: -0.1
     max: 0.1
   ct: # contrast
-    n_img: 20 # number of images to apply the contrast to
     min: -0.3
     max: 0.3
-  obs: # obstacles
-    n_img: 20 # number of images to apply the obstacles to
-    n_obs: 5
-    size: # x and y size in pixels
-      - 20
-      - 20
+  # obs: # obstacles
+  #   n_obs: 5
+  #   size: # x and y size in pixels
+  #     - 20
+  #     - 20
 
 model:
-  unet_depth: 1
+  unet_depth: 16
   sobel_filter: False
 
 training:
-  epochs: 1
+  epochs: 10
   batch_size: 10
-  upsample_to_test_size: True
+  upsample_to_test_size: False
   lr: 1e-3
   weight_decay: 1e-4
