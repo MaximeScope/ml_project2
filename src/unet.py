@@ -36,6 +36,7 @@ class UNet(nn.Module):
         ).repeat(3, 1, 1).unsqueeze_(1)
 
     def forward(self, x):
+        x = nn.LayerNorm(x.shape[1:], elementwise_affine=False)(x) 
         if self.has_sobel_filter:
             x = self.add_features(x)
         x1 = self.inc(x)

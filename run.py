@@ -9,6 +9,7 @@ import mask_to_submission
 @hydra.main(version_base=None, config_path=".", config_name="config")
 def run(cfg: DictConfig) -> None:
     print(OmegaConf.to_yaml(cfg))
+    print('-' * 80)
 
     # ===== Torch config =====
     device = cfg.device
@@ -20,6 +21,7 @@ def run(cfg: DictConfig) -> None:
 
     # ===== Model, Optimizer and Loss function =====
     model = unet.UNet(cfg)
+    print(f'U-Net parameters: {sum(p.numel() for p in model.parameters())}')
     model = model.to(device=device)
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=cfg.training.lr, weight_decay=cfg.training.weight_decay
