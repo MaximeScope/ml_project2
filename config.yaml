@@ -20,6 +20,7 @@ augmentation:
     max: 0.1
   ct: # contrast
     n_img: 0 # number of images to apply the contrast to
+    n_img: 0 # number of images to apply the contrast to
     min: -0.3
     max: 0.3
   obs: # obstacles
@@ -31,11 +32,13 @@ augmentation:
 
 model:
   unet_depth: 16
+  unet_depth: 16
   sobel_filter: False
 
 training:
   epochs: 100
   batch_size: 10
+  upsample_to_test_size: False
   upsample_to_test_size: False
   lr: 1e-3
   weight_decay: 1e-4
