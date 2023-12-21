@@ -1,32 +1,20 @@
-# Project Road Segmentation
+# Team LuAnMa CS-433 ML Project 2 - Road Segmentation
 
-For this choice of project task, we provide a set of satellite images acquired 
-from GoogleMaps. We also provide ground-truth images where each pixel is labeled 
-as road or background. 
+This project runs our best performing model for the road segmentation project. The best F1 score obtained was (insert number here)
 
-Your task is to train a classifier to segment roads in these images, i.e. 
-assigns a label `road=1, background=0` to each pixel.
+## Dataset
+We used the provided set of satellite images acquired from GoogleMaps and the ground-truth images where each pixel is labeled 
+as road or background.
 
-Submission system environment setup:
+## Data Augmentation
+We generated every possible 90-degree rotation of each picture in the training data to augment the data set. This is the
+only data augmentation we use in our final submission
 
-1. The dataset is available from the 
-[AICrowd page](https://www.aicrowd.com/challenges/epfl-ml-road-segmentation).
+## Model
 
-2. Obtain the python notebook `segment_aerial_images.ipynb` from this github 
-folder, to see example code on how to extract the images as well as 
-corresponding labels of each pixel.
+Our model uses a U-Net with a depth of 16, a learning rate of $1 \times 10^{-3}$ and a weight
+decay of $1 \times 10^{-4}$. The best F1 score was obtained by running our model over 500 epochs.
+The U-Net implementation used in the project was obtained from https://github.com/milesial/Pytorch-UNet/tree/master
 
-The notebook shows how to use `scikit learn` to generate features from each 
-pixel, and finally train a linear classifier to predict whether each pixel is 
-road or background. Or you can use your own code as well. Our example code here 
-also provides helper functions to visualize the images, labels and predictions. 
-In particular, the two functions `mask_to_submission.py` and 
-`submission_to_mask.py` help you to convert from the submission format to a 
-visualization, and vice versa.
-
-3. As a more advanced approach, try `tf_aerial_images.py`, which demonstrates 
-the use of a basic convolutional neural network in TensorFlow for the same 
-prediction task.
-
-Evaluation Metric:
- [F1 score](https://en.wikipedia.org/wiki/F1_score)
+## Running the code
+`python3 -m run`
