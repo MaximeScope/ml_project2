@@ -90,22 +90,18 @@ def plot_pred_on(test_loader, predictions, indice, cfg):
     # Create a red-to-white colormap
     cmap = LSC.from_list("red_to_white", ["red", "white"])
 
-    # # Plot the original image
-    # axes[0].imshow(image.permute(1, 2, 0))  # Permute to (H, W, C) for plotting
-    # axes[0].imshow(groundtruth, cmap=cmap, alpha=0.5)
-    # axes[0].set_title("Ground Truth")
-    # axes[0].axis("off")
-    # Plot the ground truth
-    axes[1].imshow(image.permute(1, 2, 0))  # Permute to (H, W, C) for plotting
-    axes[1].imshow(pred, cmap=cmap, alpha=0.5)
-    axes[1].set_title("Prediction")
-    axes[1].axis("off")
+    # Plot the prediction mask on top of the test image
+    axes[0].imshow(image.permute(1, 2, 0))  # Permute to (H, W, C) for plotting
+    axes[0].imshow(pred, cmap=cmap, alpha=0.5)
+    axes[0].set_title("Prediction")
+    axes[0].axis("off")
 
     plt.tight_layout()
     plt.show()
 
 
 def plot_train(train_losses, train_f1s):
+    # Plot the F1 score at each epoch
     fig, ax = plt.subplots(1, 1, figsize=(8, 4))
     ax.plot(train_losses, color='k')
     ax.set_xlabel("Epoch")

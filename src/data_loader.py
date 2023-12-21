@@ -8,7 +8,6 @@ from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 
 
-
 class AugDataset(Dataset):
     """
         This class loads the training data and applies the data augmentations
@@ -161,17 +160,11 @@ class AugDataset(Dataset):
                                 image[channel, idx[0] + i, idx[1] + j] = color[channel]
         return image, gt
 
+
 def get_loader(cfg):
     transform = transforms.Compose([transforms.ToTensor()])
 
     dataset = AugDataset(root=cfg.data_path, aug=cfg.augmentation, transform=transform)
-
-    # Define the sizes for training and testing sets
-    #train_size = int(0.8 * len(dataset))
-    #test_size = len(dataset) - train_size
-
-    # Split the dataset
-    #train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
 
     # Create DataLoader for training set
     train_loader = DataLoader(
@@ -180,22 +173,21 @@ def get_loader(cfg):
         shuffle=True,
     )
 
-    # # Create DataLoader for testing set
-    # test_loader = DataLoader(
-    #     test_dataset,
-    #     batch_size=cfg.training.batch_size,
-    #     shuffle=False,
-    # )
-
     return train_loader
 
 
 def test_data_loader(root, transform):
+    """
+        This class loads the training data
+        root: path to the root folder of the dataset
+        transform: transformation to apply to the images
+    """
     class TheDataset(Dataset):
         def __init__(self, root, transform=None, *args, **kwargs):
             super(TheDataset, self).__init__(*args, **kwargs)
             self.root = root
             self.transform = transform
+            # Save the number at the end filenames and use them as indices
             self.image_indices = [int(f.split("_")[1]) for f in os.listdir(self.root)]
             self.image_folder = os.path.join(root, "test_set_images")
 

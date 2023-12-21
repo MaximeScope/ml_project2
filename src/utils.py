@@ -1,5 +1,4 @@
 import torch
-from torchvision.transforms.functional import rotate, to_pil_image, to_tensor
 
 
 @torch.no_grad()

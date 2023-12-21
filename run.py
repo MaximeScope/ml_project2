@@ -1,12 +1,8 @@
 import hydra
 from omegaconf import DictConfig, OmegaConf
-
 import torch
-import numpy as np
-import matplotlib.pyplot as plt
-from functools import partial
 
-from src import data_loader, train, test, plotting, submissions, unet
+from src import data_loader, train, plotting, submissions, unet
 import mask_to_submission
 
 
@@ -30,7 +26,6 @@ def run(cfg: DictConfig) -> None:
     )
     loss_fn = torch.nn.functional.binary_cross_entropy
 
-    #train.optimize_param(loss_fn, 5, "lr", np.logspace(-3.6, -2.6, 5), 1e-4, cfg)
     # ===== Train Model =====
     train_losses, train_f1s = train.train_model(
         model,
@@ -41,25 +36,15 @@ def run(cfg: DictConfig) -> None:
         cfg,
     )
 
-    # ===== Test Model =====
-    # test_loss, test_f1 = test.test_model(
-    #     model,
-    #     device,
-    #     test_loader,
-    #     loss_fn=partial(loss_fn, reduction="none"),
-    # )
-
     # ==== Make Submission =====
     test_loader = data_loader.get_test_loader(cfg)
     predictions = submissions.get_predictions(model, test_loader, cfg)
     img_filenames = submissions.save_prediction_masks(predictions, test_loader, cfg)
-    #patched_preds = submissions.make_submission(predictions, cfg)
     mask_to_submission.masks_to_submission("submission.csv", cfg, *img_filenames)
 
     # ===== Plotting =====
     plotting.plot_train(train_losses, train_f1s)
     plotting.plot_pred_on(test_loader, predictions, 1, cfg)
-    #plotting.plot_pred_on(test_loader, patched_preds, 1, cfg)
 
 
 if __name__ == "__main__":
