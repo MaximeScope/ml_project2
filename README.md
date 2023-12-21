@@ -1,6 +1,6 @@
 # Team LuAnMa CS-433 ML Project 2 - Road Segmentation
 
-This project runs our best performing model for the road segmentation project. The best F1 score obtained was 0.893
+This project runs our best performing model for the road segmentation project. The best F1 score obtained was 0.897
 
 ## Dataset
 We used the provided set of satellite images acquired from GoogleMaps and the ground-truth images where each pixel is labeled 
