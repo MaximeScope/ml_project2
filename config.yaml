@@ -29,7 +29,7 @@ model:
   sobel_filter: False
 
 training:
-  epochs: 10
+  epochs: 50
   batch_size: 10
   upsample_to_test_size: False
   lr: 1e-3
