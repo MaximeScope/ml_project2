@@ -7,17 +7,17 @@ seed: 42
 tensor_dtype: 'float32'
 
 augmentation:
-  br: # brightness gradient
-    min_d: 0.1 # minimum darkness
-    max_d: 0.4 # maximum darkness
-    min_b: 0.1 # minimum brightness
-    max_b: 0.4 # minimum brightness
-  noise:
-    min: -0.1
-    max: 0.1
-  ct: # contrast
-    min: -0.3
-    max: 0.3
+  # br: # brightness gradient
+  #   min_d: 0.1 # minimum darkness
+  #   max_d: 0.4 # maximum darkness
+  #   min_b: 0.1 # minimum brightness
+  #   max_b: 0.4 # minimum brightness
+  # noise:
+  #   min: -0.1
+  #   max: 0.1
+  # ct: # contrast
+  #   min: -0.3
+  #   max: 0.3
   # obs: # obstacles
   #   n_obs: 5
   #   size: # x and y size in pixels

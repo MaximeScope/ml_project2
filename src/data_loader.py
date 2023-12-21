@@ -26,9 +26,9 @@ class AugDataset(Dataset):
             f for f in os.listdir(self.image_folder) if f.endswith(".png")
         ]
         # Dynamically set instance variables based on hydras config
-        for category, values in aug.items():
-            for key, value in values.items():
-                setattr(self, f"{category}_{key}", value)
+        # for category, values in aug.items():
+        #     for key, value in values.items():
+        #         setattr(self, f"{category}_{key}", value)
 
 
         # # Define Sobel filter kernels
@@ -46,10 +46,10 @@ class AugDataset(Dataset):
         # self.num_obs = aug.obs.n_obs
 
     def __len__(self):
-        return len(self.image_filenames * 10)
+        return len(self.image_filenames * 8)
 
     def __getitem__(self, idx):
-        id = idx // 10
+        id = idx // 8
         img_name = os.path.join(self.image_folder, self.image_filenames[id])
         gt_name = os.path.join(
             self.gt_folder, self.image_filenames[id]
@@ -64,45 +64,58 @@ class AugDataset(Dataset):
         # Convert ground truth to binary mask (streets in white, everything else in black)
         gt = torch.tensor(np.array(gt) > 128, dtype=torch.float32)
 
-        if idx % 10 == 1 or idx % 10 == 2 or idx % 10 == 3:
-            # Rotate image and ground truth by 90 degrees
+
+        # Rotate image and ground truth by 90 degrees
+        if idx % 8 in [1, 2, 3]:
             image = torch.rot90(image, k=idx % 4, dims=(1, 2))
             gt = torch.rot90(gt, k=idx % 4, dims=(0, 1))
         
+        # Rotate image and ground truth by 45 degrees
+        if idx % 8 in [4, 5, 6, 7]:
+            image_sh0 = image.shape[1]
+            padding = int(2*(1/2**0.5 - 1/2)*image.shape[1]//2)
+            image = transforms.functional.pad(image, padding, padding_mode='reflect')
+            gt = torch.squeeze(transforms.functional.pad(torch.unsqueeze(gt, 0), padding, padding_mode='reflect'), 0)
+            image = transforms.functional.rotate(image, idx % 4 * 45, expand=True)
+            gt = torch.squeeze(transforms.functional.rotate(torch.unsqueeze(gt, 0), idx % 4 * 45, expand=True), 0)
+            # crop = int((image.shape[1]*2 - image_sh0*2)**0.5)
+            image = transforms.functional.center_crop(image, image_sh0)
+            gt = transforms.functional.center_crop(gt, image_sh0)
+
         # Change the brightness of image and ground truth
-        if idx % 10 in [4, 5, 6, 7]:
-            # Set the maximum brightness and darkness level randomly between 10% and 40%
-            br_factor = torch.rand((1,)).item() * (self.br_max_b - self.br_min_b) + self.br_min_b
-            dark_factor = torch.rand((1,)).item() * (self.br_max_d - self.br_min_d) + self.br_min_d
-            # Set the direction of the brightness change randomly
-            br_direction = torch.randint(0, 4, (1,)).item()
-            # get the position of the idx in the br_indices tensor
-            if idx % 10 == 4:
-                img_mask = torch.linspace(br_factor, 1 - br_factor, image.shape[2]).view(1, -1, 1)
-            elif idx % 10 == 5:
-                img_mask = torch.linspace(br_factor, 1 - br_factor, image.shape[2]).view(1, 1, -1)
-            elif idx % 10 == 6:
-                img_mask = torch.linspace(1 - br_factor, br_factor, image.shape[2]).view(1, -1, 1)
-            elif idx % 10 == 7:
-                img_mask = torch.linspace(1 - br_factor, br_factor, image.shape[2]).view(1, 1, -1)
-            image *= img_mask
+        # if idx % 8 in [4, 5, 6, 7]:
+        #     # Set the maximum brightness and darkness level randomly between 10% and 40%
+        #     br_factor = torch.rand((1,)).item() * (self.br_max_b - self.br_min_b) + self.br_min_b
+        #     dark_factor = torch.rand((1,)).item() * (self.br_max_d - self.br_min_d) + self.br_min_d
+        #     # Set the direction of the brightness change randomly
+        #     br_direction = torch.randint(0, 4, (1,)).item()
+        #     # get the position of the idx in the br_indices tensor
+        #     if idx % 10 == 4:
+        #         img_mask = torch.linspace(br_factor, 1 - br_factor, image.shape[2]).view(1, -1, 1)
+        #     elif idx % 10 == 5:
+        #         img_mask = torch.linspace(br_factor, 1 - br_factor, image.shape[2]).view(1, 1, -1)
+        #     elif idx % 10 == 6:
+        #         img_mask = torch.linspace(1 - br_factor, br_factor, image.shape[2]).view(1, -1, 1)
+        #     elif idx % 10 == 7:
+        #         img_mask = torch.linspace(1 - br_factor, br_factor, image.shape[2]).view(1, 1, -1)
+        #     image *= img_mask
 
-        # Adding noise
-        if idx % 10 == 8:
-            noise_mask = torch.rand_like(torch.zeros(image.shape)) * (self.noise_max - self.noise_min) - self.noise_min
-            image += noise_mask 
-            # Clip the values to be in the valid range [0, 1]
-            image = torch.clamp(image, 0, 1)
+        # # Adding noise
+        # if idx % 10 == 8:
+        #     noise_mask = torch.rand_like(torch.zeros(image.shape)) * (self.noise_max - self.noise_min) - self.noise_min
+        #     image += noise_mask 
+        #     # Clip the values to be in the valid range [0, 1]
+        #     image = torch.clamp(image, 0, 1)
 
-        # Adding contrast
-        if idx % 10 == 9:
-            # Calculate the mean intensity of the image
-            ct_factor = torch.rand(1).item() * (self.ct_max - self.ct_min) - self.ct_min
-            mean_intensity = image.mean()
-            # Adjust the image contrast
-            image = (image - mean_intensity) * (1 + ct_factor) + mean_intensity
-            # Clip the values to be in the valid range [0, 1]
-            image = torch.clamp(image, 0, 1)
+        # # Adding contrast
+        # if idx % 10 == 9:
+        #     # Calculate the mean intensity of the image
+        #     ct_factor = torch.rand(1).item() * (self.ct_max - self.ct_min) - self.ct_min
+        #     mean_intensity = image.mean()
+        #     # Adjust the image contrast
+        #     image = (image - mean_intensity) * (1 + ct_factor) + mean_intensity
+        #     # Clip the values to be in the valid range [0, 1]
+        #     image = torch.clamp(image, 0, 1)
 
         # Adding road obstacles
         # if idx in self.obs_indices:
