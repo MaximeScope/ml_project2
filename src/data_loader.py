@@ -66,21 +66,26 @@ class AugDataset(Dataset):
 
 
         # Rotate image and ground truth by 90 degrees
-        if idx % 8 in [1, 2, 3]:
-            image = torch.rot90(image, k=idx % 4, dims=(1, 2))
-            gt = torch.rot90(gt, k=idx % 4, dims=(0, 1))
+        # if idx % 8 in [1, 2, 3]:
+        #     image = torch.rot90(image, k=idx % 4, dims=(1, 2))
+        #     gt = torch.rot90(gt, k=idx % 4, dims=(0, 1))
         
         # Rotate image and ground truth by 45 degrees
-        if idx % 8 in [4, 5, 6, 7]:
+        if idx % 8 != 0:
             image_sh0 = image.shape[1]
             padding = int(2*(1/2**0.5 - 1/2)*image.shape[1]//2)
+            gt = torch.unsqueeze(gt, 0)
+
             image = transforms.functional.pad(image, padding, padding_mode='reflect')
-            gt = torch.squeeze(transforms.functional.pad(torch.unsqueeze(gt, 0), padding, padding_mode='reflect'), 0)
-            image = transforms.functional.rotate(image, idx % 4 * 45, expand=True)
-            gt = torch.squeeze(transforms.functional.rotate(torch.unsqueeze(gt, 0), idx % 4 * 45, expand=True), 0)
-            # crop = int((image.shape[1]*2 - image_sh0*2)**0.5)
+            gt = transforms.functional.pad(gt, padding, padding_mode='reflect')
+
+            image = transforms.functional.rotate(image, idx % 8 * 45, expand=True)
+            gt = transforms.functional.rotate(gt, idx % 8 * 45, expand=True)
+
             image = transforms.functional.center_crop(image, image_sh0)
             gt = transforms.functional.center_crop(gt, image_sh0)
+
+            gt = torch.squeeze(gt, 0)
 
         # Change the brightness of image and ground truth
         # if idx % 8 in [4, 5, 6, 7]:
