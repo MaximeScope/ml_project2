@@ -7,7 +7,7 @@ We used the provided set of satellite images acquired from GoogleMaps and the gr
 as road or background.
 
 ## Data Augmentation
-We generated every possible 90-degree rotation of each picture in the training data to augment the data set. This is the
+We generated every possible 45-degree rotation of each picture in the training data to augment the data set. This is the
 only data augmentation we use in our final submission
 
 ## Model
