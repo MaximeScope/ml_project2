@@ -19,7 +19,7 @@ class AugDataset(Dataset):
         super(Dataset, self).__init__(*args, **kwargs)
         self.root = root
         self.transform = transform
-        self.do_rotate = aug.rot
+        #self.do_rotate = aug.rot
         self.image_folder = os.path.join(root, "training", "images")
         self.gt_folder = os.path.join(root, "training", "groundtruth")
         self.image_filenames = [
